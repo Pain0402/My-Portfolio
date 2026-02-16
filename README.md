@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Creative Portfolio 2025
 
-## Getting Started
+A high-performance, interactive portfolio website built with **Next.js 15**, **React Three Fiber**, and **Tailwind CSS v4**.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*   **3D Space Environment:** Interactive star field background using Three.js & R3F.
+*   **Scrollytelling:** Immersive storytelling experience using Framer Motion.
+*   **Bento Grid:** Modern skills showcase layout.
+*   **Project Showcase:** Horizontal scroll gallery with sticky positioning.
+*   **Animations:** High-performance animations powered by Anime.js v4.
+*   **Glassmorphism:** Consistent UI theme with frosted glass effects.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   **Framework:** Next.js 15 (App Router)
+*   **Styling:** Tailwind CSS v4
+*   **3D:** Three.js, React Three Fiber, Drei
+*   **Animation:** Framer Motion, Anime.js v4, Lenis (Smooth Scroll)
+*   **Language:** TypeScript
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Getting Started
 
-## Learn More
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Run Development Server:**
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📂 Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+*   `app/`: Application routes and layouts.
+*   `components/home/`: Hero, About, Projects, and Skills sections.
+*   `components/three/`: 3D scene components (StarField, Scene).
+*   `components/shared/`: Reusable layout components (Navbar, Footer).
+*   `docs/`: Design/Architectural documentation.
 
-## Deploy on Vercel
+## 🎨 Customization
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+*   **Theme:** Edit `app/globals.css` to change CSS variables for colors (Galaxy Theme).
+*   **Content:** Update the text in `components/home/*.tsx` files.
+*   **Projects:** Add new projects in `components/home/Projects.tsx` and `app/projects/[slug]/page.tsx`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+Designed & Built by **Antigravity**.
