@@ -1,5 +1,7 @@
 # Creative Portfolio 2025
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FPain0402%2FMy-Portfolio)
+
 A high-performance, interactive portfolio website built with **Next.js 15**, **React Three Fiber**, and **Tailwind CSS v4**.
 
 ## 🚀 Key Features
@@ -18,15 +20,22 @@ A high-performance, interactive portfolio website built with **Next.js 15**, **R
 *   **3D:** Three.js, React Three Fiber, Drei
 *   **Animation:** Framer Motion, Anime.js v4, Lenis (Smooth Scroll)
 *   **Language:** TypeScript
+*   **Deployment:** Vercel (Recommended)
 
 ## 📦 Getting Started
 
-1.  **Install Dependencies:**
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/Pain0402/My-Portfolio.git
+    cd My-Portfolio
+    ```
+
+2.  **Install Dependencies:**
     ```bash
     npm install
     ```
 
-2.  **Run Development Server:**
+3.  **Run Development Server:**
     ```bash
     npm run dev
     ```
@@ -48,4 +57,4 @@ A high-performance, interactive portfolio website built with **Next.js 15**, **R
 
 ---
 
-Designed & Built by **Antigravity**.
+Designed & Built by **Tran Huu Giang**.
