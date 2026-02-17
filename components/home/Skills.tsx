@@ -163,7 +163,7 @@ export default function Skills() {
                                             key={skill.name}
                                             onClick={() => setSelectedSkill(skill)}
                                             whileHover={{ y: -5, borderColor: "rgba(0, 245, 212, 0.4)" }}
-                                            className="group relative bg-[#0f0f1a]/60 backdrop-blur-md rounded-2xl border border-white/10 p-6 cursor-pointer overflow-hidden transition-all duration-300"
+                                            className="group relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6 cursor-pointer overflow-hidden transition-all duration-300 hover:bg-white/10 hover:border-white/20"
                                         >
                                             {/* Hover Glow */}
                                             <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-cyan)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

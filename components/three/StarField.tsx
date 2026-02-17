@@ -29,9 +29,10 @@ export function StarField(props: any) {
                 <PointMaterial
                     transparent
                     color="#00f5d4"
-                    size={0.002}
+                    size={0.0035} // Increased size for visibility
                     sizeAttenuation={true}
                     depthWrite={false}
+                    toneMapped={false} // Important for bloom!
                 />
             </Points>
         </group>
