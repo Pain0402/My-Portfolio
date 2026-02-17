@@ -5,14 +5,16 @@ import Container from "@/components/ui/Container";
 import { clsx } from "clsx";
 
 const skills = [
-    { name: "React / Next.js", category: "Frontend", size: "col-span-2 row-span-2", bg: "bg-gradient-to-br from-blue-900/50 to-cyan-900/50" },
-    { name: "TypeScript", category: "Language", size: "col-span-1 row-span-1", bg: "bg-[#3178C6]/20" },
-    { name: "Tailwind CSS", category: "Styling", size: "col-span-1 row-span-1", bg: "bg-[#06B6D4]/20" },
-    { name: "Three.js / R3F", category: "Creative", size: "col-span-2 row-span-1", bg: "bg-gradient-to-r from-orange-500/20 to-yellow-500/20" },
-    { name: "Node.js", category: "Backend", size: "col-span-1 row-span-2", bg: "bg-[#339933]/20" },
-    { name: "PostgreSQL", category: "Database", size: "col-span-1 row-span-1", bg: "bg-[#336791]/20" },
-    { name: "Figma", category: "Design", size: "col-span-1 row-span-1", bg: "bg-[#F24E1E]/20" },
-    { name: "Anime.js", category: "Animation", size: "col-span-1 row-span-1", bg: "bg-[#db3a00]/20" },
+    { name: "Flutter", category: "Mobile", size: "col-span-1 row-span-1", bg: "bg-[#027DFD]/10" },
+    { name: "Vue.js 3", category: "Frontend", size: "col-span-1 row-span-1", bg: "bg-[#42B883]/10" },
+    { name: "React / Next.js", category: "Frontend", size: "col-span-2 row-span-2", bg: "bg-gradient-to-br from-blue-900/40 to-cyan-900/40" },
+    { name: "Node.js", category: "Backend", size: "col-span-1 row-span-2", bg: "bg-[#339933]/10" },
+    { name: ".NET 8 (C#)", category: "Backend", size: "col-span-1 row-span-1", bg: "bg-[#512BD4]/10" },
+    { name: "PostgreSQL", category: "Database", size: "col-span-1 row-span-1", bg: "bg-[#336791]/10" },
+    { name: "Supabase", category: "BaaS", size: "col-span-1 row-span-1", bg: "bg-[#3ECF8E]/10" },
+    { name: "Three.js / R3F", category: "Creative", size: "col-span-2 row-span-1", bg: "bg-gradient-to-r from-orange-500/10 to-yellow-500/10" },
+    { name: "OpenAI API", category: "AI", size: "col-span-1 row-span-1", bg: "bg-[#10A37F]/10" },
+    { name: "Docker", category: "DevOps", size: "col-span-1 row-span-1", bg: "bg-[#2496ED]/10" },
 ];
 
 export default function Skills() {

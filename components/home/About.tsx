@@ -36,18 +36,20 @@ export default function About() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 text-left mt-20">
                         {/* Portrait Card */}
-                        <div className="lg:col-span-1 glass p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-[var(--accent-cyan)] transition-colors duration-500">
-                            <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-gray-800">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                                {/* Placeholder for User Image */}
-                                <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">
-                                    [Insert Portrait Here]
-                                </div>
-                                {/* <img src="/path/to/portrait.jpg" alt="Tran Huu Giang" className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700" /> */}
+                        <div className="lg:col-span-1">
+                            <div className="sticky top-24 glass p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-[var(--accent-cyan)] transition-colors duration-500 max-w-sm mx-auto lg:max-w-none">
+                                <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-gray-800">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                                    {/* Placeholder for User Image */}
+                                    <div className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">
+                                        [Insert Portrait Here]
+                                    </div>
+                                    {/* <img src="/path/to/portrait.jpg" alt="Tran Huu Giang" className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700" /> */}
 
-                                <div className="absolute bottom-4 left-4 z-20">
-                                    <span className="block text-xs font-mono text-[var(--accent-cyan)] mb-1">HELLO_WORLD</span>
-                                    <h3 className="text-xl font-display font-bold text-white">Giang Tran</h3>
+                                    <div className="absolute bottom-4 left-4 z-20">
+                                        <span className="block text-xs font-mono text-[var(--accent-cyan)] mb-1">HELLO_WORLD</span>
+                                        <h3 className="text-xl font-display font-bold text-white">Giang Tran</h3>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -67,10 +69,17 @@ export default function About() {
                                     When I'm not debugging, you'll find me **drawing**, **listening to music**, or immersing myself in **anime & movies**. I'm also an avid **gamer**, always appreciating the art and logic behind great games.
                                 </p>
                             </div>
+
+                            <div className="glass p-8 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                                <h3 className="text-xl font-display font-semibold text-[var(--accent-purple)] mb-4">Future Vision</h3>
+                                <p className="text-gray-400 leading-7">
+                                    I am aiming for **Fullstack Developer** or **AI Application Engineer** roles. My long-term goal is to lead innovative projects that combine aesthetic design with powerful backend logic, pushing the boundaries of what's possible on the web.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
             </Container>
-        </section>
+        </section >
     );
 }
