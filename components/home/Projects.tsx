@@ -49,7 +49,7 @@ export default function Projects() {
                     </div>
 
                     {projects.map((project) => (
-                        <div key={project.slug} className="group relative w-[800px] h-[500px] flex-shrink-0">
+                        <div key={project.slug} className="group relative w-[85vw] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[450px] lg:h-[500px] flex-shrink-0">
                             <Link href={`/projects/${project.slug}`} className="block w-full h-full">
                                 <div
                                     className={`w-full h-full rounded-3xl ${project.background_gradient || 'bg-white/5'} border border-white/10 relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]`}
