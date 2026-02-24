@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Github, ExternalLink } from "lucide-react";
 import ProjectGallery from "@/components/project/ProjectGallery";
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -175,7 +176,10 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
 }
 
 export async function generateStaticParams() {
-    const supabase = await createClient();
+    const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     const { data: projects } = await supabase.from("projects").select("slug");
     return projects?.map((project: { slug: string }) => ({
         slug: project.slug,
