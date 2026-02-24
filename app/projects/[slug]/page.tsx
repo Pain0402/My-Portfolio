@@ -95,9 +95,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         /* Fallback Placeholder */
                         <div className={`relative w-full aspect-video rounded-3xl overflow-hidden glass-card group ${project.background_gradient || 'bg-white/5'}`}>
                             {project.cover_image_url && project.cover_image_url.startsWith('http') && (
-                                <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" style={{ backgroundImage: `url(${project.cover_image_url})` }}></div>
+                                <div className="absolute inset-0 bg-cover bg-center opacity-90 transition-opacity duration-500" style={{ backgroundImage: `url(${project.cover_image_url})` }}></div>
                             )}
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] group-hover:bg-black/10 transition-colors">
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[2px] group-hover:bg-black/30 transition-colors">
                                 <div className="text-center p-8 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10">
                                     <img src={project.logo_url || '/globe.svg'} alt={`${project.title} Logo`} className="w-24 h-24 object-contain mx-auto mb-4" />
                                     <span className="text-white/80 text-xl font-light">

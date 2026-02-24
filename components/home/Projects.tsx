@@ -55,9 +55,9 @@ export default function Projects() {
                                     className={`w-full h-full rounded-3xl ${project.background_gradient || 'bg-white/5'} border border-white/10 relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]`}
                                 >
                                     {project.cover_image_url && project.cover_image_url.startsWith('http') && (
-                                        <div className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-30 transition-opacity duration-500 mix-blend-overlay" style={{ backgroundImage: `url(${project.cover_image_url})` }}></div>
+                                        <div className="absolute inset-0 bg-cover bg-center opacity-90 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundImage: `url(${project.cover_image_url})` }}></div>
                                     )}
-                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500" />
 
                                     {/* Logo positioned top-left */}
                                     <div className="absolute top-8 left-8 w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl p-2 flex items-center justify-center border border-white/10 shadow-lg group-hover:scale-110 transition-transform duration-300">
