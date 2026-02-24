@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { LogOut, LayoutDashboard, FolderKanban, Wrench, User } from "lucide-react";
+import { LogOut, LayoutDashboard, FolderKanban, Wrench, User, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -53,8 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                 key={item.name}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
-                                        ? "bg-white/10 text-[var(--accent-cyan)] border border-white/10 shadow-[0_0_15px_rgba(0,245,212,0.1)]"
-                                        : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
+                                    ? "bg-white/10 text-[var(--accent-cyan)] border border-white/10 shadow-[0_0_15px_rgba(0,245,212,0.1)]"
+                                    : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
                                     }`}
                             >
                                 <item.icon className="w-5 h-5" />
@@ -78,6 +78,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <LogOut className="w-5 h-5" />
                         <span className="font-medium">Sign Out</span>
                     </button>
+                    <Link
+                        href="/"
+                        className="w-full flex items-center gap-3 px-4 py-3 mt-2 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all border border-transparent"
+                    >
+                        <Home className="w-5 h-5" />
+                        <span className="font-medium">Back to Home</span>
+                    </Link>
                 </div>
             </aside>
 

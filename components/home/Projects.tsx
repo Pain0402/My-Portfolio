@@ -49,8 +49,8 @@ export default function Projects() {
     return (
         <section id="projects" className="relative bg-transparent pt-32 pb-32 min-h-screen overflow-hidden">
             {/* Background Glows */}
-            <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-[var(--accent-cyan)] rounded-full blur-[120px] opacity-10 md:opacity-20 animate-pulse mix-blend-screen pointer-events-none" />
-            <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[var(--accent-purple)] rounded-full blur-[100px] opacity-10 md:opacity-20 mix-blend-screen pointer-events-none" />
+            <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-[var(--accent-cyan)] rounded-full blur-[120px] opacity-5 md:opacity-10 animate-pulse mix-blend-screen pointer-events-none" />
+            <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[var(--accent-purple)] rounded-full blur-[100px] opacity-5 md:opacity-10 mix-blend-screen pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center relative z-10">
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-6">
@@ -129,8 +129,8 @@ export default function Projects() {
                                 className="relative group/dock-item focus:outline-none flex-shrink-0"
                             >
                                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center border transition-all duration-300 transform origin-bottom hover:scale-125 hover:-translate-y-2 hover:bg-white/20 hover:border-white/30 hover:backdrop-blur-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] ${idx === activeIndex
-                                        ? 'bg-white/20 border-white/40 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.1)]'
-                                        : 'bg-white/5 border-white/10 backdrop-blur-sm opacity-70 hover:opacity-100'
+                                    ? 'bg-white/20 border-white/40 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.1)]'
+                                    : 'bg-white/5 border-white/10 backdrop-blur-sm opacity-70 hover:opacity-100'
                                     }`}>
                                     <img src={project.logo_url || '/globe.svg'} alt={project.title} className="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-lg transition-transform duration-300 group-hover/dock-item:scale-110" />
                                 </div>
@@ -148,19 +148,6 @@ export default function Projects() {
                                 )}
                             </button>
                         ))}
-
-                        <div className="w-[2px] h-8 md:h-10 bg-white/10 mx-2 md:mx-4 rounded-full flex-shrink-0"></div>
-
-                        {/* Extra View All Link */}
-                        <Link href="/admin/projects" className="group/alltext flex flex-col items-center justify-center flex-shrink-0">
-                            <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm opacity-70 hover:opacity-100 hover:bg-white/20 hover:backdrop-blur-xl transition-all duration-300 transform origin-bottom hover:scale-125 hover:-translate-y-2">
-                                <ArrowRight className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-[#111111] font-medium border border-white/10 text-white text-xs px-3 py-2 rounded-xl opacity-0 group-hover/alltext:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl z-[100]">
-                                All Projects
-                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#111111] border-b border-r border-white/10 transform rotate-45"></div>
-                            </div>
-                        </Link>
                     </div>
                 </div>
             </div>
