@@ -7,12 +7,18 @@ import { ArrowLeft, Upload, Loader2, Save, Image as ImageIcon } from "lucide-rea
 import Link from "next/link";
 import Image from "next/image";
 
+import { toast } from "sonner";
+
 const GRADIENTS = [
+    { name: "Transparent", class: "bg-transparent" },
     { name: "Purple-Blue", class: "bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" },
     { name: "Emerald-Cyan", class: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900" },
     { name: "Rose-Purple", class: "bg-gradient-to-br from-rose-900 via-pink-900 to-purple-900" },
     { name: "Amber-Red", class: "bg-gradient-to-br from-amber-900 via-orange-900 to-red-900" },
     { name: "Slate-Black", class: "bg-gradient-to-br from-slate-800 via-gray-900 to-black" },
+    { name: "Sunset", class: "bg-gradient-to-tr from-orange-600 via-red-600 to-rose-700" },
+    { name: "Ocean", class: "bg-gradient-to-br from-cyan-700 via-blue-800 to-indigo-900" },
+    { name: "Nebula", class: "bg-gradient-to-br from-violet-800 via-fuchsia-800 to-pink-800" },
 ];
 
 export default function NewProjectPage() {
@@ -44,10 +50,10 @@ export default function NewProjectPage() {
         setIsLoading(true);
         setError(null);
 
-        try {
-            const formElement = e.currentTarget;
-            const textFormData = new FormData(formElement);
+        const formElement = e.currentTarget;
+        const textFormData = new FormData(formElement);
 
+        try {
             // Upload Logo if exists
             let finalLogoUrl = "";
             if (logoFile) {
@@ -72,11 +78,17 @@ export default function NewProjectPage() {
             await createProject(textFormData);
         } catch (err: any) {
             if (err.message && err.message.includes('NEXT_REDIRECT')) {
-                // Ignore redirect error, it's handled by Next.js
+                toast.success("Project created successfully!", {
+                    description: `Project "${textFormData.get('title')}" has been created.`,
+                });
                 return;
             }
             console.error(err);
-            setError(err.message || "Failed to create project.");
+            const errMsg = err.message || "Failed to create project.";
+            setError(errMsg);
+            toast.error("Error creating project", {
+                description: errMsg,
+            });
             setIsLoading(false);
         }
     };

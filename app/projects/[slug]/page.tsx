@@ -4,6 +4,12 @@ import Link from "next/link";
 import { ArrowLeft, Github, ExternalLink } from "lucide-react";
 import ProjectGallery from "@/components/project/ProjectGallery";
 import { createClient } from "@/utils/supabase/server";
+
+function getYoutubeVideoId(url: string) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
@@ -16,6 +22,8 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
     if (error || !project) {
         return notFound();
     }
+
+    const youtubeId = project.demo_url ? getYoutubeVideoId(project.demo_url) : null;
 
     return (
         <main className="min-h-screen bg-[var(--bg-space)] pt-32 pb-20">
@@ -49,7 +57,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                                 View Repository
                             </a>
                         )}
-                        {project.demo_url && (
+                        {project.demo_url && !youtubeId && (
                             <a
                                 href={project.demo_url}
                                 target="_blank"
@@ -62,6 +70,22 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         )}
                     </div>
                 </div>
+
+                {/* Video Embed */}
+                {youtubeId && (
+                    <div className="mb-20 max-w-5xl mx-auto">
+                        <div className="relative w-full aspect-video rounded-3xl overflow-hidden glass-card border border-[var(--accent-cyan)]/30 shadow-[0_0_30px_rgba(0,245,212,0.1)]">
+                            <iframe
+                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}`}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                className="absolute top-0 left-0 w-full h-full"
+                            ></iframe>
+                        </div>
+                    </div>
+                )}
 
                 {/* Media Gallery / Video Carousel */}
                 <div className="mb-20">

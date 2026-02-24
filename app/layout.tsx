@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Portfolio of Tran Huu Giang - Specializing in Frontend, Backend, and AI.",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,6 +33,7 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-[var(--bg-space)] text-white overflow-x-hidden`}
       >
         <SmoothScroll>{children}</SmoothScroll>
+        <Toaster theme="dark" position="bottom-right" toastOptions={{ className: 'bg-[var(--bg-space)] border-white/10 text-white' }} />
       </body>
     </html>
   );

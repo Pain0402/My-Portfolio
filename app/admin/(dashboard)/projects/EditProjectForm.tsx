@@ -6,13 +6,18 @@ import { updateProject, uploadMedia } from "@/app/actions/projects.action";
 import { ArrowLeft, Upload, Loader2, Save, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const GRADIENTS = [
+    { name: "Transparent", class: "bg-transparent" },
     { name: "Purple-Blue", class: "bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" },
     { name: "Emerald-Cyan", class: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900" },
     { name: "Rose-Purple", class: "bg-gradient-to-br from-rose-900 via-pink-900 to-purple-900" },
     { name: "Amber-Red", class: "bg-gradient-to-br from-amber-900 via-orange-900 to-red-900" },
     { name: "Slate-Black", class: "bg-gradient-to-br from-slate-800 via-gray-900 to-black" },
+    { name: "Sunset", class: "bg-gradient-to-tr from-orange-600 via-red-600 to-rose-700" },
+    { name: "Ocean", class: "bg-gradient-to-br from-cyan-700 via-blue-800 to-indigo-900" },
+    { name: "Nebula", class: "bg-gradient-to-br from-violet-800 via-fuchsia-800 to-pink-800" },
 ];
 
 export default function EditProjectForm({ project }: { project: any }) {
@@ -51,10 +56,10 @@ export default function EditProjectForm({ project }: { project: any }) {
         setIsLoading(true);
         setError(null);
 
-        try {
-            const formElement = e.currentTarget;
-            const textFormData = new FormData(formElement);
+        const formElement = e.currentTarget;
+        const textFormData = new FormData(formElement);
 
+        try {
             // Upload Logo if new file selected
             let finalLogoUrl = project.logo_url;
             if (logoFile) {
@@ -79,10 +84,17 @@ export default function EditProjectForm({ project }: { project: any }) {
             await updateProject(project.id, textFormData);
         } catch (err: any) {
             if (err.message && err.message.includes('NEXT_REDIRECT')) {
+                toast.success("Project updated successfully!", {
+                    description: `Project "${textFormData.get('title')}" has been updated.`,
+                });
                 return;
             }
             console.error(err);
-            setError(err.message || "Failed to edit project.");
+            const errMsg = err.message || "Failed to edit project.";
+            setError(errMsg);
+            toast.error("Error updating project", {
+                description: errMsg,
+            });
             setIsLoading(false);
         }
     };

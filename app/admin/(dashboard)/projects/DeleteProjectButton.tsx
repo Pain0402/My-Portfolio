@@ -3,6 +3,7 @@
 import { Trash2 } from "lucide-react";
 import { deleteProject } from "@/app/actions/projects.action";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function DeleteProjectButton({ projectId }: { projectId: string }) {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -12,8 +13,12 @@ export function DeleteProjectButton({ projectId }: { projectId: string }) {
             setIsDeleting(true);
             try {
                 await deleteProject(projectId);
-            } catch (err) {
+                toast.success("Project deleted successfully");
+            } catch (err: any) {
                 console.error(err);
+                toast.error("Error deleting project", {
+                    description: err.message || "Failed to delete project.",
+                });
                 setIsDeleting(false);
             }
         }
