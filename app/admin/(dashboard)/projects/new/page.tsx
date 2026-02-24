@@ -7,9 +7,18 @@ import { ArrowLeft, Upload, Loader2, Save, Image as ImageIcon } from "lucide-rea
 import Link from "next/link";
 import Image from "next/image";
 
+const GRADIENTS = [
+    { name: "Purple-Blue", class: "bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900" },
+    { name: "Emerald-Cyan", class: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-900" },
+    { name: "Rose-Purple", class: "bg-gradient-to-br from-rose-900 via-pink-900 to-purple-900" },
+    { name: "Amber-Red", class: "bg-gradient-to-br from-amber-900 via-orange-900 to-red-900" },
+    { name: "Slate-Black", class: "bg-gradient-to-br from-slate-800 via-gray-900 to-black" },
+];
+
 export default function NewProjectPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedGradient, setSelectedGradient] = useState(GRADIENTS[0].class);
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const [coverFile, setCoverFile] = useState<File | null>(null);
@@ -57,6 +66,8 @@ export default function NewProjectPage() {
 
             if (finalLogoUrl) textFormData.set("logo_url", finalLogoUrl);
             if (finalCoverUrl) textFormData.set("cover_image_url", finalCoverUrl);
+
+            textFormData.set("background_gradient", selectedGradient);
 
             await createProject(textFormData);
         } catch (err: any) {
@@ -134,7 +145,26 @@ export default function NewProjectPage() {
 
                 {/* Media */}
                 <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-md">
-                    <h2 className="text-xl font-display font-semibold text-white mb-6 border-b border-white/10 pb-4">Media</h2>
+                    <h2 className="text-xl font-display font-semibold text-white mb-6 border-b border-white/10 pb-4">Media & Design</h2>
+
+                    <div className="mb-8 space-y-3">
+                        <label className="text-sm font-medium text-gray-300">Background Gradient <span className="text-gray-500 font-normal">(Used as card background)</span></label>
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            {GRADIENTS.map((grad) => (
+                                <button
+                                    key={grad.name}
+                                    type="button"
+                                    onClick={() => setSelectedGradient(grad.class)}
+                                    className={`relative h-24 rounded-xl border-2 transition-all overflow-hidden ${selectedGradient === grad.class ? 'border-[var(--accent-cyan)] scale-105 shadow-[0_0_15px_rgba(0,245,212,0.3)]' : 'border-white/10 hover:border-white/30'}`}
+                                >
+                                    <div className={`absolute inset-0 ${grad.class}`}></div>
+                                    <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-xs text-center text-white backdrop-blur-sm truncate">
+                                        {grad.name}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Logo Upload */}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Plus, Edit, Trash2, FolderKanban } from "lucide-react";
 import { deleteProject } from "@/app/actions/projects.action";
 import Image from "next/image";
+import { DeleteProjectButton } from "./DeleteProjectButton";
 
 export const metadata = {
     title: 'Manage Projects | Admin',
@@ -87,19 +88,7 @@ export default async function ProjectsPage() {
                                                     <Edit className="w-4 h-4" />
                                                 </Link>
 
-                                                <form action={async () => {
-                                                    "use server";
-                                                    await deleteProject(project.id);
-                                                }}>
-                                                    <button
-                                                        type="submit"
-                                                        className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 text-gray-300 hover:text-white hover:bg-red-500/20 hover:border hover:border-red-500/30 transition-all group"
-                                                        title="Delete Project"
-                                                    // Can add a simple window.confirm below using native form standard patterns if needed, for now keep it simple direct delete
-                                                    >
-                                                        <Trash2 className="w-4 h-4 group-hover:text-red-400" />
-                                                    </button>
-                                                </form>
+                                                <DeleteProjectButton projectId={project.id} />
                                             </div>
                                         </td>
                                     </tr>

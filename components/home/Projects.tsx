@@ -52,8 +52,11 @@ export default function Projects() {
                         <div key={project.slug} className="group relative w-[800px] h-[500px] flex-shrink-0">
                             <Link href={`/projects/${project.slug}`} className="block w-full h-full">
                                 <div
-                                    className={`w-full h-full rounded-3xl ${project.img} border border-white/10 relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]`}
+                                    className={`w-full h-full rounded-3xl ${project.background_gradient || 'bg-white/5'} border border-white/10 relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]`}
                                 >
+                                    {project.cover_image_url && project.cover_image_url.startsWith('http') && (
+                                        <div className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-30 transition-opacity duration-500 mix-blend-overlay" style={{ backgroundImage: `url(${project.cover_image_url})` }}></div>
+                                    )}
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
 
                                     {/* Logo positioned top-left */}

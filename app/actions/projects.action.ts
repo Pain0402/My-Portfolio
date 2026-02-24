@@ -25,6 +25,7 @@ export async function createProject(formData: FormData) {
     const problem_statement = formData.get("problem_statement") as string || null;
     const architecture = formData.get("architecture") as string || null;
     const learnings = formData.get("learnings") as string || null;
+    const background_gradient = formData.get("background_gradient") as string || null;
 
     const { error } = await supabase.from("projects").insert({
         title,
@@ -41,6 +42,7 @@ export async function createProject(formData: FormData) {
         problem_statement,
         architecture,
         learnings,
+        background_gradient,
     });
 
     if (error) {
@@ -72,6 +74,7 @@ export async function updateProject(id: string, formData: FormData) {
     const problem_statement = formData.get("problem_statement") as string || null;
     const architecture = formData.get("architecture") as string || null;
     const learnings = formData.get("learnings") as string || null;
+    const background_gradient = formData.get("background_gradient") as string || null;
 
     const { error } = await supabase.from("projects").update({
         title,
@@ -88,6 +91,7 @@ export async function updateProject(id: string, formData: FormData) {
         problem_statement,
         architecture,
         learnings,
+        background_gradient,
     }).eq("id", id);
 
     if (error) {
