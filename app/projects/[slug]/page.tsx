@@ -203,12 +203,22 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
 }
 
 export async function generateStaticParams() {
-    const supabase = createSupabaseClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    const { data: projects } = await supabase.from("projects").select("slug");
-    return projects?.map((project: { slug: string }) => ({
-        slug: project.slug,
-    })) || [];
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.warn('Supabase URL or Anon Key is missing. Skipping static generation for project detail pages.');
+        return [];
+    }
+
+    try {
+        const supabase = createSupabaseClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        );
+        const { data: projects } = await supabase.from("projects").select("slug");
+        return projects?.map((project: { slug: string }) => ({
+            slug: project.slug,
+        })) || [];
+    } catch (e) {
+        console.error('Error in generateStaticParams for projects:', e);
+        return [];
+    }
 }
