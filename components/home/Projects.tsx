@@ -1,11 +1,9 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import Container from "@/components/ui/Container";
-
-import { projects } from "@/data/projects";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Projects() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -15,6 +13,22 @@ export default function Projects() {
 
     const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
+    // Fetch projects from Supabase
+    const [projects, setProjects] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            const supabase = createClient();
+            const { data } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+            if (data) {
+                setProjects(data);
+            }
+            setIsLoading(false);
+        };
+        fetchProjects();
+    }, []);
+
     return (
         <section ref={targetRef} id="projects" className="relative h-[300vh]">
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
@@ -23,9 +37,15 @@ export default function Projects() {
                         <h2 className="text-6xl md:text-8xl font-display font-bold text-white mb-6">
                             Selected <br /> <span className="text-gradient">Works</span>
                         </h2>
-                        <p className="text-gray-400 text-xl max-w-sm">
+                        <p className="text-gray-400 text-xl max-w-sm mb-6">
                             Discover my recent projects, from mobile apps to full-stack platforms.
                         </p>
+                        {isLoading && (
+                            <div className="flex items-center gap-2 text-[var(--accent-cyan)]">
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <span>Loading projects from database...</span>
+                            </div>
+                        )}
                     </div>
 
                     {projects.map((project) => (
@@ -38,7 +58,7 @@ export default function Projects() {
 
                                     {/* Logo positioned top-left */}
                                     <div className="absolute top-8 left-8 w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl p-2 flex items-center justify-center border border-white/10 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                        <img src={project.logo} alt={`${project.title} Logo`} className="w-full h-full object-contain" />
+                                        <img src={project.logo_url || '/globe.svg'} alt={`${project.title} Logo`} className="w-full h-full object-contain" />
                                     </div>
 
                                     <div className="absolute bottom-0 left-0 p-10 w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent">
@@ -51,7 +71,7 @@ export default function Projects() {
                                                 <div className="h-0 opacity-0 overflow-hidden group-hover:h-auto group-hover:opacity-100 transition-all duration-500 delay-100">
                                                     <p className="text-gray-300 mb-4 line-clamp-2">{project.description}</p>
                                                     <div className="flex flex-wrap gap-2 mb-2">
-                                                        {project.techStack.map((tech) => (
+                                                        {project.tech_stack?.map((tech: string) => (
                                                             <span key={tech} className="text-xs font-mono bg-white/10 text-[var(--accent-cyan)] px-2 py-1 rounded border border-white/5">
                                                                 {tech}
                                                             </span>

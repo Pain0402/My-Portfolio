@@ -1,15 +1,18 @@
 import Container from "@/components/ui/Container";
-import { projects } from "@/data/projects";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Github, ExternalLink } from "lucide-react";
 import ProjectGallery from "@/components/project/ProjectGallery";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const project = projects.find((p) => p.slug === slug);
 
-    if (!project) {
+    // Fetch from Supabase
+    const supabase = await createClient();
+    const { data: project, error } = await supabase.from("projects").select("*").eq("slug", slug).single();
+
+    if (error || !project) {
         return notFound();
     }
 
@@ -34,9 +37,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                     </p>
 
                     <div className="flex justify-center gap-6 mt-10">
-                        {project.repoUrl && (
+                        {project.repo_url && (
                             <a
-                                href={project.repoUrl}
+                                href={project.repo_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white/10 transition-all hover:scale-105 flex items-center gap-2"
@@ -45,9 +48,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                                 View Repository
                             </a>
                         )}
-                        {project.demoUrl && (
+                        {project.demo_url && (
                             <a
-                                href={project.demoUrl}
+                                href={project.demo_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-8 py-3 rounded-full bg-[var(--accent-cyan)] text-black border border-[var(--accent-cyan)] font-semibold hover:bg-[var(--accent-cyan)]/80 transition-all hover:scale-105 flex items-center gap-2"
@@ -68,7 +71,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         <div className={`relative w-full aspect-video rounded-3xl overflow-hidden glass-card group ${project.img}`}>
                             <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] group-hover:bg-black/10 transition-colors">
                                 <div className="text-center p-8 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10">
-                                    <img src={project.logo} alt={`${project.title} Logo`} className="w-24 h-24 object-contain mx-auto mb-4" />
+                                    <img src={project.logo_url || '/globe.svg'} alt={`${project.title} Logo`} className="w-24 h-24 object-contain mx-auto mb-4" />
                                     <span className="text-white/80 text-xl font-light">
                                         Project Gallery Coming Soon
                                     </span>
@@ -91,13 +94,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         </div>
 
                         {/* Problem Statement */}
-                        {project.problemStatement && (
+                        {project.problem_statement && (
                             <div>
                                 <h2 className="text-3xl font-display font-semibold text-white mb-6 flex items-center gap-3">
                                     <span className="text-[var(--accent-pink)]">/</span> The Problem
                                 </h2>
                                 <p className="leading-8 text-lg text-gray-300">
-                                    {project.problemStatement}
+                                    {project.problem_statement}
                                 </p>
                             </div>
                         )}
@@ -143,7 +146,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
                         <div className="glass p-8 rounded-2xl border border-white/5 bg-white/5">
                             <h3 className="text-lg font-semibold text-white mb-4 border-b border-white/10 pb-2">Tech Stack</h3>
                             <div className="flex flex-wrap gap-2">
-                                {project.techStack.map((tech) => (
+                                {project.tech_stack?.map((tech: string) => (
                                     <span key={tech} className="px-3 py-1 text-sm bg-white/5 rounded-md border border-white/10 text-[var(--accent-cyan)] font-mono">
                                         {tech}
                                     </span>
@@ -172,7 +175,9 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
 }
 
 export async function generateStaticParams() {
-    return projects.map((project) => ({
+    const supabase = await createClient();
+    const { data: projects } = await supabase.from("projects").select("slug");
+    return projects?.map((project: { slug: string }) => ({
         slug: project.slug,
-    }));
+    })) || [];
 }
