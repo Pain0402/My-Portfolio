@@ -26,7 +26,7 @@ export default function Navbar() {
 
         // If 5 clicks within 2 seconds
         if (newClicks.length >= 5) {
-            router.push("/admin/login");
+            router.push("/hub");
             setClicks([]);
         }
     };
