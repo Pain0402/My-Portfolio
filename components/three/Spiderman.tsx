@@ -1,9 +1,11 @@
 "use client"
 import React, { useRef, useState, useEffect } from 'react'
 import { useFrame, useGraph } from '@react-three/fiber'
-import { useGLTF, useFBX, useAnimations, useKeyboardControls } from '@react-three/drei'
+import { useGLTF, useFBX, useAnimations, useKeyboardControls, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { SkeletonUtils, GLTF } from 'three-stdlib'
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+import { useSandboxStore } from '@/store/useSandboxStore'
 
 type GLTFResult = GLTF & {
   nodes: any
@@ -12,6 +14,9 @@ type GLTFResult = GLTF & {
 
 export function Spiderman(props: any) {
   const group = useRef<THREE.Group>(null)
+  const controlsRef = useRef<OrbitControlsImpl>(null)
+  const previousPosition = useRef(new THREE.Vector3())
+  const [hasInitializedCamera, setHasInitializedCamera] = useState(false);
 
   // 1. Load Main Model
   const { scene } = useGLTF('/models/spiderman.glb')
@@ -92,12 +97,15 @@ export function Spiderman(props: any) {
   const wasForwardRef = useRef(false);
   const doubleTapSprintRef = useRef(false);
 
+  const buildMode = useSandboxStore((state) => state.buildMode)
+
   // 5. Update Loop
   useFrame((state, delta) => {
     if (!group.current) return;
 
     const { forward, backward, left, right, jump, run, skill, bow, wave, dance } = get()
-    const isMoving = forward || backward || left || right;
+    // Disable movement if in build mode
+    const isMoving = !buildMode && (forward || backward || left || right);
 
     const now = state.clock.elapsedTime;
 
@@ -117,19 +125,19 @@ export function Spiderman(props: any) {
 
     let nextAnim = 'Idle';
 
-    if (dance) {
+    if (dance && !buildMode) {
       nextAnim = 'Dance';
       group.current.userData.lockedUntil = now + (actions['Dance']?.getClip().duration || 1) - 0.2;
-    } else if (bow) {
+    } else if (bow && !buildMode) {
       nextAnim = 'Bow';
       group.current.userData.lockedUntil = now + (actions['Bow']?.getClip().duration || 1) - 0.2;
-    } else if (wave) {
+    } else if (wave && !buildMode) {
       nextAnim = 'Wave';
       group.current.userData.lockedUntil = now + (actions['Wave']?.getClip().duration || 1) - 0.2;
-    } else if (skill) {
+    } else if (skill && !buildMode) {
       nextAnim = 'Skill';
       group.current.userData.lockedUntil = now + (actions['Skill']?.getClip().duration || 1) - 0.2;
-    } else if (jump) {
+    } else if (jump && !buildMode) {
       nextAnim = 'Jump';
       group.current.userData.lockedUntil = now + (actions['Jump']?.getClip().duration || 1) - 0.2;
     } else if (isMoving) {
@@ -157,8 +165,17 @@ export function Spiderman(props: any) {
     const isStationaryAnim = ['Dance', 'Bow', 'Wave', 'Skill'].includes(nextAnim);
 
     if (isMoving && !isStationaryAnim) {
-      const moveDir = new THREE.Vector3(moveX, 0, moveZ).normalize();
-      const targetAngle = Math.atan2(moveDir.x, moveDir.z);
+      // Calculate angle relative to camera
+      const angleYCameraDirection = Math.atan2(
+        (state.camera.position.x - group.current.position.x),
+        (state.camera.position.z - group.current.position.z)
+      );
+
+      // Direction offset based on input
+      const directionOffset = Math.atan2(moveX, moveZ);
+
+      // Combine to rotate character correctly
+      const targetAngle = angleYCameraDirection + directionOffset;
 
       const targetRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, targetAngle, 0));
       group.current.quaternion.slerp(targetRotation, delta * rotationSpeed);
@@ -167,17 +184,50 @@ export function Spiderman(props: any) {
       group.current.translateZ(currentSpeed * delta);
     }
 
-    // Optional: make camera follow the character
-    const cameraOffset = new THREE.Vector3(0, 3, 6);
-    const targetCameraPos = group.current.position.clone().add(cameraOffset);
-    state.camera.position.lerp(targetCameraPos, 0.1);
-    state.camera.lookAt(group.current.position.clone().add(new THREE.Vector3(0, 1.5, 0)));
+    // Camera follow the character via OrbitControls
+    if (controlsRef.current && group.current) {
+      if (!hasInitializedCamera) {
+        // Initialize camera at a nice isometric angle (Bruno Simon style)
+        state.camera.position.set(10, 15, 10);
+        state.camera.lookAt(group.current.position);
+        setHasInitializedCamera(true);
+      }
+
+      // Find movement delta
+      const deltaPos = group.current.position.clone().sub(previousPosition.current);
+
+      // Move camera by delta
+      state.camera.position.add(deltaPos);
+
+      // Move target to match character
+      const targetPos = group.current.position.clone().add(new THREE.Vector3(0, 1.5, 0));
+      controlsRef.current.target.copy(targetPos);
+
+      controlsRef.current.update();
+
+      previousPosition.current.copy(group.current.position);
+    } else if (group.current) {
+      previousPosition.current.copy(group.current.position);
+    }
   })
 
   return (
-    <group ref={group} {...props} dispose={null}>
-      <primitive object={clone} />
-    </group>
+    <>
+      <OrbitControls
+        ref={controlsRef}
+        mouseButtons={{ RIGHT: THREE.MOUSE.ROTATE, LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY }}
+        enablePan={false}
+        enableRotate={false} // Disable manual rotation for true isometric feel!
+        enableZoom={true}
+        enableDamping={true}
+        dampingFactor={0.05}
+        minDistance={5}
+        maxDistance={25}
+      />
+      <group ref={group} {...props} dispose={null}>
+        <primitive object={clone} />
+      </group>
+    </>
   )
 }
 
