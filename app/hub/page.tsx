@@ -6,6 +6,7 @@ import { PenTool, Calendar, Shield, Home, Trash2, ArrowRight, Save, CheckCircle,
 import { getNote, updateNote, getTodos, addTodo, updateTodoStatus, deleteTodoAction } from "@/app/actions/hub.action";
 import DailyQuote from "@/components/hub/DailyQuote";
 import LofiPlayer from "@/components/hub/LofiPlayer";
+import { YearProgress } from "@/components/ui/YearProgress";
 
 // Dynamically import Scene to avoid SSR issues with Three.js
 const Scene = dynamic(() => import("@/components/three/Scene"), { ssr: false });
@@ -25,9 +26,6 @@ export default function HubPage() {
     const [newTodo, setNewTodo] = useState("");
     const [isFetchingTodos, setIsFetchingTodos] = useState(true);
 
-    // Countdown State
-    const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
     useEffect(() => {
         // Fetch Note from DB
         getNote().then(data => setNote(data?.content || ""));
@@ -37,24 +35,6 @@ export default function HubPage() {
             setTodos(data as Todo[]);
             setIsFetchingTodos(false);
         });
-
-        // Tet Countdown Logic (Target: Feb 6, 2027)
-        const tetDate = new Date("2027-02-06T00:00:00+07:00").getTime();
-        const timer = setInterval(() => {
-            const now = new Date().getTime();
-            const distance = tetDate - now;
-
-            if (distance > 0) {
-                setTimeLeft({
-                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-                    seconds: Math.floor((distance % (1000 * 60)) / 1000),
-                });
-            }
-        }, 1000);
-
-        return () => clearInterval(timer);
     }, []);
 
     // Handle Note Change (Auto-save with debounce)
@@ -138,33 +118,7 @@ export default function HubPage() {
             <div className="w-full max-w-[1400px] grid grid-cols-1 lg:grid-cols-4 gap-6 z-10">
 
                 {/* Countdown Timer */}
-                <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md lg:col-span-4 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[var(--accent-cyan)]/10 rounded-full blur-3xl group-hover:bg-[var(--accent-cyan)]/20 transition-all duration-700 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-[var(--accent-purple)]/10 rounded-full blur-3xl group-hover:bg-[var(--accent-purple)]/20 transition-all duration-700 pointer-events-none"></div>
-
-                    <div className="flex items-center gap-4 mb-6 md:mb-0 relative z-10 text-[var(--accent-cyan)]">
-                        <div className="p-4 bg-[var(--accent-cyan)]/10 rounded-2xl border border-[var(--accent-cyan)]/20">
-                            <Calendar size={32} />
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-bold tracking-widest uppercase">Tết 2027 Countdown</h2>
-                            <p className="text-gray-400 font-mono text-sm mt-1">Target: Feb 6, 2027</p>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 sm:gap-6 relative z-10">
-                        {Object.entries(timeLeft).map(([unit, value]) => (
-                            <div key={unit} className="flex flex-col items-center">
-                                <div className="w-16 h-20 sm:w-20 sm:h-24 glassmorphism bg-black/40 border border-white/10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,245,212,0.1)]">
-                                    <span className="text-3xl sm:text-4xl font-display font-bold text-white tracking-widest">
-                                        {String(value).padStart(2, '0')}
-                                    </span>
-                                </div>
-                                <span className="text-gray-400 mt-2 uppercase text-[10px] sm:text-xs tracking-[0.2em]">{unit}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <YearProgress className="lg:col-span-4 w-full h-auto p-6 md:p-8" />
 
                 {/* Notes Module */}
                 <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col lg:col-span-1 h-[600px]">
