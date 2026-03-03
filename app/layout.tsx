@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/shared/SmoothScroll";
+import HolographicCursor from "@/components/ui/HolographicCursor";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-[var(--bg-space)] text-white overflow-x-hidden`}
       >
+        <HolographicCursor />
         <SmoothScroll>{children}</SmoothScroll>
         <Toaster theme="dark" position="bottom-right" toastOptions={{ className: 'bg-[var(--bg-space)] border-white/10 text-white' }} />
       </body>
