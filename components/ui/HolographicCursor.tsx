@@ -11,30 +11,23 @@ interface Star {
     y: number;
     opacity: number;
     createdAt: number;
+    el: HTMLDivElement; // Cache DOM reference directly — no more getElementById per frame
 }
 
 export default function HolographicCursor() {
     const pathname = usePathname();
     const cursorRef = useRef<HTMLDivElement>(null);
-    const svgRef = useRef<SVGSVGElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isEnabled, setIsEnabled] = useState(true);
 
-    // Position of the actual mouse and the lerped cursor
     const mouse = useRef({ x: -100, y: -100 });
     const cursorObj = useRef({ x: -100, y: -100 });
 
-    // Store stars left behind
     const starsRef = useRef<Star[]>([]);
     const starIdCounter = useRef(0);
     const lastStarCreated = useRef(0);
-
     const requestRef = useRef<number>(0);
-
     const starsContainerRef = useRef<HTMLDivElement>(null);
-
-    // React state to force re-renders for the static stars and connections when needed
-    // We remove the React state renderTrigger entirely to avoid lagging the cursor with too many VDOM diffs.
-    // DOM will be manipulated directly.
 
     useEffect(() => {
         if (pathname === '/playground' || !isEnabled) {
@@ -44,55 +37,60 @@ export default function HolographicCursor() {
 
         document.body.style.cursor = 'none';
 
+        // Resize canvas to match window
+        const resizeCanvas = () => {
+            if (canvasRef.current) {
+                const dpr = window.devicePixelRatio || 1;
+                canvasRef.current.width = window.innerWidth * dpr;
+                canvasRef.current.height = window.innerHeight * dpr;
+                canvasRef.current.style.width = window.innerWidth + 'px';
+                canvasRef.current.style.height = window.innerHeight + 'px';
+                const ctx = canvasRef.current.getContext('2d');
+                if (ctx) ctx.scale(dpr, dpr);
+            }
+        };
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
         const createStar = (x: number, y: number) => {
             const now = Date.now();
-            if (now - lastStarCreated.current < 200) return; // Prevent spamming, create a star every 200ms of movement
+            if (now - lastStarCreated.current < 250) return;
+
+            const starEl = document.createElement('div');
+            starEl.style.cssText = `position:absolute;width:4px;height:4px;margin-left:-2px;margin-top:-2px;background:#4cc9f0;border-radius:50%;box-shadow:0 0 8px 2px rgba(76,201,240,1), 0 0 16px rgba(76,201,240,0.4);left:${x}px;top:${y}px;opacity:1;`;
+
+            if (starsContainerRef.current) {
+                starsContainerRef.current.appendChild(starEl);
+            }
 
             const newStar: Star = {
                 id: starIdCounter.current++,
-                x,
-                y,
+                x, y,
                 opacity: 1,
-                createdAt: now
+                createdAt: now,
+                el: starEl
             };
 
             starsRef.current.push(newStar);
             lastStarCreated.current = now;
 
-            // Optional: Remove old stars after 5 seconds to prevent DOM bloat
-            if (starsRef.current.length > 15) {
-                starsRef.current.shift();
+            // Cap at 12 stars max
+            if (starsRef.current.length > 12) {
+                const old = starsRef.current.shift();
+                if (old) old.el.remove();
             }
-
-            // OPTIMIZATION: Manually append the star DOM element instead of relying on React state re-render
-            if (starsContainerRef.current) {
-                const starEl = document.createElement('div');
-                starEl.id = `star-${newStar.id}`;
-                starEl.className = `absolute w-[3px] h-[3px] -ml-[1.5px] -mt-[1.5px] bg-[var(--accent-cyan)] rounded-full shadow-[0_0_8px_rgba(76,201,240,1)]`;
-                starEl.style.left = `${x}px`;
-                starEl.style.top = `${y}px`;
-                starEl.style.opacity = '1';
-                starEl.style.willChange = 'opacity';
-                starsContainerRef.current.appendChild(starEl);
-            }
-
-            // Note: In a production app, instead of forcing React re-render constantly on mouse move,
-            // we should manually inject SVG <circle> and <line> elements into the DOM for max 60FPS.
-            // But for a portfolio with < 15 stars, this is acceptable.
         };
 
         const handleMouseMove = (e: MouseEvent) => {
             mouse.current = { x: e.clientX, y: e.clientY };
 
-            // Create a star if we moved enough
             const dist = Math.hypot(e.clientX - cursorObj.current.x, e.clientY - cursorObj.current.y);
-            if (dist > 50) {
+            if (dist > 60) {
                 createStar(e.clientX, e.clientY);
             }
         };
 
         const handleMouseClick = (e: MouseEvent) => {
-            // Pulse the current cursor dot
             if (cursorRef.current) {
                 animate(cursorRef.current, {
                     scale: [1, 3, 1],
@@ -100,79 +98,72 @@ export default function HolographicCursor() {
                     easing: 'easeOutElastic(1, .5)'
                 });
             }
-
-            // Immediately create a star on click
             createStar(e.clientX, e.clientY);
         };
 
         const renderConstellations = () => {
-            // Lerp the main cursor
-            cursorObj.current.x += (mouse.current.x - cursorObj.current.x) * 0.2;
-            cursorObj.current.y += (mouse.current.y - cursorObj.current.y) * 0.2;
+            // Instant cursor — no delay
+            cursorObj.current.x = mouse.current.x;
+            cursorObj.current.y = mouse.current.y;
 
             if (cursorRef.current) {
                 cursorRef.current.style.transform = `translate(${cursorObj.current.x}px, ${cursorObj.current.y}px)`;
             }
 
-            // Update SVG lines directly for performance
-            if (svgRef.current) {
-                svgRef.current.innerHTML = ''; // Clear prev lines
+            // Draw lines on Canvas2D
+            const canvas = canvasRef.current;
+            const ctx = canvas?.getContext('2d');
+            if (ctx && canvas) {
+                const dpr = window.devicePixelRatio || 1;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                const maxDistance = 150; // Max connect distance
+                const maxDist = 150;
                 const stars = starsRef.current;
-
-                // Fade out old stars
                 const now = Date.now();
+
+                // Update stars + draw lines
                 for (let i = stars.length - 1; i >= 0; i--) {
                     const age = now - stars[i].createdAt;
+
+                    // Fade out after 4s
                     if (age > 4000) {
-                        stars[i].opacity -= 0.02; // Fade out
+                        stars[i].opacity -= 0.015;
                         if (stars[i].opacity <= 0) {
-
-                            // Remove DOM element
-                            if (starsContainerRef.current) {
-                                const starEl = document.getElementById(`star-${stars[i].id}`);
-                                if (starEl) starEl.remove();
-                            }
+                            stars[i].el.remove();
                             stars.splice(i, 1);
-
                             continue;
                         }
-                    } else {
-                        // Keep opacity in sync
-                        if (starsContainerRef.current) {
-                            const starEl = document.getElementById(`star-${stars[i].id}`);
-                            if (starEl) starEl.style.opacity = stars[i].opacity.toFixed(3);
-                        }
+                        stars[i].el.style.opacity = String(stars[i].opacity);
                     }
 
-                    // Check distance from current cursor
-                    const distToCursor = Math.hypot(cursorObj.current.x - stars[i].x, cursorObj.current.y - stars[i].y);
-                    if (distToCursor < maxDistance) {
-                        const lineOpacity = (1 - distToCursor / maxDistance) * stars[i].opacity * 0.8;
-                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                        line.setAttribute('x1', cursorObj.current.x.toString());
-                        line.setAttribute('y1', cursorObj.current.y.toString());
-                        line.setAttribute('x2', stars[i].x.toString());
-                        line.setAttribute('y2', stars[i].y.toString());
-                        line.setAttribute('stroke', 'rgba(255, 255, 255, ' + lineOpacity + ')');
-                        line.setAttribute('stroke-width', '1');
-                        svgRef.current.appendChild(line);
+                    // Line from cursor to star
+                    const dx = cursorObj.current.x - stars[i].x;
+                    const dy = cursorObj.current.y - stars[i].y;
+                    const distToCursor = Math.sqrt(dx * dx + dy * dy); // faster than hypot
+                    if (distToCursor < maxDist) {
+                        const alpha = (1 - distToCursor / maxDist) * stars[i].opacity * 0.9;
+                        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(cursorObj.current.x, cursorObj.current.y);
+                        ctx.lineTo(stars[i].x, stars[i].y);
+                        ctx.stroke();
                     }
 
-                    // Check distance to other stars
+                    // Lines between nearby stars
                     for (let j = i + 1; j < stars.length; j++) {
-                        const dist = Math.hypot(stars[i].x - stars[j].x, stars[i].y - stars[j].y);
-                        if (dist < maxDistance) {
-                            const lineOpacity = (1 - dist / maxDistance) * Math.min(stars[i].opacity, stars[j].opacity) * 0.5;
-                            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                            line.setAttribute('x1', stars[i].x.toString());
-                            line.setAttribute('y1', stars[i].y.toString());
-                            line.setAttribute('x2', stars[j].x.toString());
-                            line.setAttribute('y2', stars[j].y.toString());
-                            line.setAttribute('stroke', 'rgba(76, 201, 240, ' + lineOpacity + ')');
-                            line.setAttribute('stroke-width', '0.5'); // Thinner lines between stars
-                            svgRef.current.appendChild(line);
+                        const sx = stars[i].x - stars[j].x;
+                        const sy = stars[i].y - stars[j].y;
+                        const dist = Math.sqrt(sx * sx + sy * sy);
+                        if (dist < maxDist) {
+                            const alpha = (1 - dist / maxDist) * Math.min(stars[i].opacity, stars[j].opacity) * 0.6;
+                            ctx.strokeStyle = `rgba(76,201,240,${alpha})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.beginPath();
+                            ctx.moveTo(stars[i].x, stars[i].y);
+                            ctx.lineTo(stars[j].x, stars[j].y);
+                            ctx.stroke();
                         }
                     }
                 }
@@ -183,45 +174,25 @@ export default function HolographicCursor() {
 
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            const isClickable =
-                target.tagName === 'A' ||
-                target.tagName === 'BUTTON' ||
-                target.tagName === 'INPUT' ||
-                target.tagName === 'TEXTAREA' ||
-                target.tagName === 'SELECT' ||
-                target.closest('a') ||
-                target.closest('button') ||
-                target.closest('[role="button"]');
-
-            if (isClickable && cursorRef.current && cursorRef.current.firstChild) {
-                animate(cursorRef.current.firstChild as HTMLElement, {
-                    scale: 2.5,
-                    rotate: 90,
-                    duration: 400,
-                    easing: 'easeOutElastic(1, .5)'
-                });
+            if (target.closest('a, button, input, textarea, select, [role="button"]')) {
+                if (cursorRef.current?.firstChild) {
+                    animate(cursorRef.current.firstChild as HTMLElement, {
+                        scale: 2.5, rotate: 90,
+                        duration: 400, easing: 'easeOutElastic(1, .5)'
+                    });
+                }
             }
         };
 
         const handleMouseOut = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            const isClickable =
-                target.tagName === 'A' ||
-                target.tagName === 'BUTTON' ||
-                target.tagName === 'INPUT' ||
-                target.tagName === 'TEXTAREA' ||
-                target.tagName === 'SELECT' ||
-                target.closest('a') ||
-                target.closest('button') ||
-                target.closest('[role="button"]');
-
-            if (isClickable && cursorRef.current && cursorRef.current.firstChild) {
-                animate(cursorRef.current.firstChild as HTMLElement, {
-                    scale: 1,
-                    rotate: 0,
-                    duration: 400,
-                    easing: 'easeOutExpo'
-                });
+            if (target.closest('a, button, input, textarea, select, [role="button"]')) {
+                if (cursorRef.current?.firstChild) {
+                    animate(cursorRef.current.firstChild as HTMLElement, {
+                        scale: 1, rotate: 0,
+                        duration: 400, easing: 'easeOutExpo'
+                    });
+                }
             }
         };
 
@@ -236,6 +207,7 @@ export default function HolographicCursor() {
             window.removeEventListener('mousedown', handleMouseClick);
             document.removeEventListener('mouseover', handleMouseOver);
             document.removeEventListener('mouseout', handleMouseOut);
+            window.removeEventListener('resize', resizeCanvas);
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
             document.body.style.cursor = 'auto';
 
@@ -267,27 +239,26 @@ export default function HolographicCursor() {
     if (pathname === '/playground' || !isEnabled) return null;
 
     return (
-        <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden mix-blend-screen">
+        <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
 
-            <svg
-                ref={svgRef}
+            {/* Canvas2D for lines — 10x faster than SVG innerHTML */}
+            <canvas
+                ref={canvasRef}
                 className="absolute inset-0 w-full h-full"
-                style={{ filter: 'drop-shadow(0px 0px 4px rgba(255,255,255,0.8))' }}
             />
 
-            {/* Static Stars Left Behind (Rendered manually to DOM for perf) */}
+            {/* Star dots container */}
             <div ref={starsContainerRef} className="absolute inset-0" />
 
-            {/* Main Cursor Moving Star */}
+            {/* Cursor dot */}
             <div
                 ref={cursorRef}
                 className="absolute top-0 left-0"
                 style={{ willChange: 'transform' }}
             >
-                <div className="w-[6px] h-[6px] -ml-[3px] -mt-[3px] bg-white rounded-full flex items-center justify-center mix-blend-difference shadow-[0_0_15px_rgba(255,255,255,1)]">
-                    {/* Tiny cross styling */}
-                    <div className="absolute w-[14px] h-[1px] bg-white opacity-60"></div>
-                    <div className="absolute w-[1px] h-[14px] bg-white opacity-60"></div>
+                <div className="w-[8px] h-[8px] -ml-[4px] -mt-[4px] bg-white rounded-full flex items-center justify-center shadow-[0_0_16px_4px_rgba(255,255,255,1),0_0_30px_rgba(76,201,240,0.5)]">
+                    <div className="absolute w-[18px] h-[1.5px] bg-white opacity-80"></div>
+                    <div className="absolute w-[1.5px] h-[18px] bg-white opacity-80"></div>
                 </div>
             </div>
 

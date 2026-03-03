@@ -4,9 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { StarField } from "./StarField";
 import { FloatingShapes } from "./FloatingShapes";
 import { Suspense } from "react";
-import { EffectComposer, Bloom, Noise, Vignette, ChromaticAberration } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
-import { Vector2 } from "three";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 
 export default function Scene() {
     return (
@@ -19,36 +17,22 @@ export default function Scene() {
                         <FloatingShapes />
                     </group>
 
-                    {/* Cyberpunk Post-Processing - HIGH INTENSITY */}
+                    {/* Post-Processing — Optimized for performance */}
                     <EffectComposer disableNormalPass>
-                        {/* Neon Glow - Balanced & Soft */}
+                        {/* Neon Glow — Reduced intensity */}
                         <Bloom
-                            luminanceThreshold={0.2}
+                            luminanceThreshold={0.3}
                             luminanceSmoothing={0.9}
-                            intensity={0.6}
+                            intensity={0.4}
                             mipmapBlur
                         />
 
-                        {/* Cinematic Grain - More visible */}
-                        <Noise
-                            opacity={0.08}
-                            blendFunction={BlendFunction.OVERLAY}
-                        />
-
-                        {/* Focus Attention - Stronger edges */}
+                        {/* Focus Attention — lighter vignette */}
                         {/* @ts-ignore */}
                         <Vignette
                             eskil={false}
-                            offset={0.15}
-                            darkness={1.2}
-                        />
-
-                        {/* Glitch/Color Shift - More pronounced */}
-                        {/* @ts-ignore */}
-                        <ChromaticAberration
-                            offset={new Vector2(0.003, 0.003)} // Slightly reduced
-                            radialModulation={false}
-                            modulationOffset={0}
+                            offset={0.2}
+                            darkness={0.8}
                         />
                     </EffectComposer>
                 </Suspense>

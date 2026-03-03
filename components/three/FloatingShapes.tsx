@@ -24,14 +24,14 @@ function FloatingLetter({ letter, position, color, speed = 1, rotation = [0, 0, 
                     <Text3D
                         ref={mesh}
                         font={fontUrl}
-                        size={4} // Larger size
-                        height={0.5} // Extrude depth
-                        curveSegments={12}
+                        size={3}
+                        height={0.3}
+                        curveSegments={6}
                         bevelEnabled
-                        bevelThickness={0.1}
-                        bevelSize={0.05}
+                        bevelThickness={0.05}
+                        bevelSize={0.03}
                         bevelOffset={0}
-                        bevelSegments={5}
+                        bevelSegments={2}
                     >
                         {letter}
                         <meshStandardMaterial
