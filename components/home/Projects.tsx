@@ -4,12 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Loader2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function Projects() {
     const [projects, setProjects] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
+
+    const headerRef = useScrollReveal<HTMLDivElement>({ preset: "fade-up", duration: 1000 });
+    const dockRef = useScrollReveal<HTMLDivElement>({ preset: "scale-up", delay: 300, duration: 800 });
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -52,7 +56,7 @@ export default function Projects() {
             <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-[var(--accent-cyan)] rounded-full blur-[120px] opacity-5 md:opacity-10 animate-pulse mix-blend-screen pointer-events-none" />
             <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[var(--accent-purple)] rounded-full blur-[100px] opacity-5 md:opacity-10 mix-blend-screen pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center relative z-10">
+            <div ref={headerRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center relative z-10">
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-6">
                     Selected <span className="text-gradient">Works</span>
                 </h2>
@@ -120,7 +124,7 @@ export default function Projects() {
                 </div>
 
                 {/* MacBook Dock - The Taskbar Wrapper */}
-                <div className="w-full max-w-[100vw] overflow-x-auto no-scrollbar pt-12 pb-6 -mt-8 relative z-50">
+                <div ref={dockRef} className="w-full max-w-[100vw] overflow-x-auto no-scrollbar pt-12 pb-6 -mt-8 relative z-50">
                     <div className="mx-auto w-max px-6 py-4 bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex items-center justify-center gap-4 transition-all">
                         {projects.map((project, idx) => (
                             <button

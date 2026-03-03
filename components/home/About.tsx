@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { createClient } from "@/utils/supabase/client";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface ProfileData {
     display_name: string;
@@ -24,15 +24,6 @@ function renderBoldMarkdown(text: string) {
 }
 
 export default function About() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"],
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], [0, 1, 1, 0]);
-
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
     useEffect(() => {
@@ -49,7 +40,12 @@ export default function About() {
         fetchProfile();
     }, []);
 
-    // Fallback values while loading or if DB is unavailable
+    // Scroll reveal refs
+    const titleRef = useScrollReveal<HTMLHeadingElement>({ preset: "fade-up", duration: 1000 });
+    const bioRef = useScrollReveal<HTMLParagraphElement>({ preset: "fade-up", delay: 200, duration: 1000 });
+    const portraitRef = useScrollReveal<HTMLDivElement>({ preset: "fade-left", delay: 300, duration: 900 });
+    const cardsRef = useScrollReveal<HTMLDivElement>({ preset: "stagger-children", delay: 100, staggerDelay: 150, duration: 800 });
+
     const displayName = profile?.display_name || "Tran Huu Giang";
     const bio = profile?.bio || "Hi, I'm Tran Huu Giang. I turn ideas into interactive digital realities.";
     const coreStrengths = profile?.core_strengths || 'My expertise lies at the intersection of **Frontend**, **Backend**, and **Artificial Intelligence**. I enjoy building scalable systems and integrating smart AI solutions into seamless user interfaces.';
@@ -59,22 +55,18 @@ export default function About() {
 
     return (
         <section
-            ref={containerRef}
             id="about"
-            className="relative min-h-[150vh] py-20"
+            className="relative min-h-[120vh] py-20"
         >
             <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-space)] via-[var(--bg-deep)]/80 to-[var(--bg-space)] pointer-events-none" />
 
             <Container className="relative z-10 flex flex-col items-center">
-                <motion.div
-                    style={{ y, opacity }}
-                    className="max-w-4xl text-center space-y-12"
-                >
-                    <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8">
+                <div className="max-w-4xl text-center space-y-12">
+                    <h2 ref={titleRef} className="text-4xl md:text-6xl font-display font-bold text-white mb-8">
                         <span className="text-[var(--accent-purple)]">/</span> About Me
                     </h2>
 
-                    <p className="text-2xl md:text-3xl font-light leading-relaxed text-gray-300">
+                    <p ref={bioRef} className="text-2xl md:text-3xl font-light leading-relaxed text-gray-300">
                         &quot;{bio.includes(displayName)
                             ? bio.split(displayName).map((part, i, arr) => (
                                 <React.Fragment key={i}>
@@ -88,7 +80,7 @@ export default function About() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 text-left mt-20">
                         {/* Portrait Card */}
-                        <div className="lg:col-span-1">
+                        <div ref={portraitRef} className="lg:col-span-1">
                             <div className="sticky top-24 glass p-4 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm group hover:border-[var(--accent-cyan)] transition-colors duration-500 max-w-sm mx-auto lg:max-w-none">
                                 <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-gray-800">
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
@@ -113,8 +105,8 @@ export default function About() {
                             </div>
                         </div>
 
-                        {/* Text Content */}
-                        <div className="lg:col-span-2 space-y-12">
+                        {/* Text Content — stagger animated */}
+                        <div ref={cardsRef} className="lg:col-span-2 space-y-12">
                             <div className="glass p-8 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
                                 <h3 className="text-xl font-display font-semibold text-[var(--accent-cyan)] mb-4">Core Strengths</h3>
                                 <p className="text-gray-400 leading-7">
@@ -137,7 +129,7 @@ export default function About() {
                             </div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </Container>
         </section>
     );

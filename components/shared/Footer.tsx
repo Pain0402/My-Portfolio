@@ -1,15 +1,21 @@
+"use client";
+
 import Container from "@/components/ui/Container";
 import Link from "next/link";
 import { Github, Twitter, Mail, Linkedin } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function Footer() {
+    const leftRef = useScrollReveal<HTMLDivElement>({ preset: "fade-left", duration: 900 });
+    const rightRef = useScrollReveal<HTMLDivElement>({ preset: "fade-right", delay: 200, duration: 900 });
+
     return (
         <footer id="contact" className="bg-[var(--bg-deep)] border-t border-white/5 py-20 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--accent-purple)]/50 to-transparent"></div>
 
             <Container>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
+                    <div ref={leftRef}>
                         <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-4">
                             Let's build <br />
                             <span className="text-gradient">something amazing.</span>
@@ -26,7 +32,7 @@ export default function Footer() {
                         </a>
                     </div>
 
-                    <div className="flex flex-col md:items-end justify-center space-y-8">
+                    <div ref={rightRef} className="flex flex-col md:items-end justify-center space-y-8">
                         <div className="flex gap-6">
                             <Link href="https://github.com/Pain0402" target="_blank" className="p-4 rounded-full glass hover:bg-white/10 transition-colors group">
                                 <Github className="text-gray-400 group-hover:text-white transition-colors" />

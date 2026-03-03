@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { X, Code2, Server, Database, Smartphone, Cloud, Cpu } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface Skill {
     name: string;
@@ -123,12 +124,13 @@ const skills: Skill[] = [
 
 export default function Skills() {
     const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+    const headerRef = useScrollReveal<HTMLDivElement>({ preset: "fade-up", duration: 1000 });
 
     return (
         <section id="skills" className="py-32 relative min-h-screen">
             <Container>
                 {/* Header */}
-                <div className="text-center mb-20 space-y-4">
+                <div ref={headerRef} className="text-center mb-20 space-y-4">
                     <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
                         Tech <span className="text-gradient-cyan inline-block animate-pulse-slow">Arsenal</span>
                     </h2>
