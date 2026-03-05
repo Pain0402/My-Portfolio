@@ -219,9 +219,20 @@ export default function HolographicCursor() {
     }, [pathname, isEnabled]);
 
     useEffect(() => {
+        const savedState = localStorage.getItem('holographicCursorEnabled');
+        if (savedState !== null) {
+            setIsEnabled(savedState === 'true');
+        }
+    }, []);
+
+    useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key.toLowerCase() === 'c' && e.ctrlKey) {
-                setIsEnabled(prev => !prev);
+                setIsEnabled(prev => {
+                    const next = !prev;
+                    localStorage.setItem('holographicCursorEnabled', String(next));
+                    return next;
+                });
             }
         };
         window.addEventListener('keydown', handleKeyDown);
