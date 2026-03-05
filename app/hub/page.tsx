@@ -103,7 +103,7 @@ export default function HubPage() {
                         <Home size={16} /> Home
                     </button>
                     <button
-                        onClick={() => router.push('/admin/login')}
+                        onClick={() => router.push('/admin/dashboard')}
                         className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent-pink)]/30 hover:border-[var(--accent-pink)] bg-[var(--accent-pink)]/10 hover:bg-[var(--accent-pink)]/20 transition-all text-[var(--accent-pink)] text-sm font-medium tracking-wide"
                     >
                         <Shield size={16} /> Admin Portal

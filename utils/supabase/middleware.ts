@@ -31,11 +31,15 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
-    const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
-    const isLoginRoute = request.nextUrl.pathname === '/admin/login'
-    const isExactAdminRoute = request.nextUrl.pathname === '/admin'
+    // Protect these routes
+    const isProtected =
+        request.nextUrl.pathname.startsWith('/admin') ||
+        request.nextUrl.pathname.startsWith('/hub') ||
+        request.nextUrl.pathname.startsWith('/playground')
 
-    if (isAdminRoute) {
+    const isLoginRoute = request.nextUrl.pathname === '/admin/login'
+
+    if (isProtected) {
         if (!user && !isLoginRoute) {
             // Redirect unauthenticated users to login page
             const url = request.nextUrl.clone()
@@ -46,20 +50,16 @@ export async function updateSession(request: NextRequest) {
         if (user && isLoginRoute) {
             // Redirect authenticated users away from login page
             const url = request.nextUrl.clone()
-            url.pathname = '/admin/dashboard'
+            url.pathname = '/hub'
             return NextResponse.redirect(url)
         }
 
-        if (user && isExactAdminRoute) {
-            // Redirect exactly /admin to /admin/dashboard
+        // Keep exact /admin redirecting to /admin/dashboard
+        if (user && request.nextUrl.pathname === '/admin') {
             const url = request.nextUrl.clone()
             url.pathname = '/admin/dashboard'
             return NextResponse.redirect(url)
         }
-
-        // Optional: Add logic here to check if the specific connected GitHub account email
-        // is YOUR email. E.g.
-        // if (user && user.email !== 'your.github.email@example.com') { ... block }
     }
 
     return supabaseResponse
