@@ -1,9 +1,58 @@
 "use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useInView, Variants } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { X, Code2, Server, Database, Smartphone, Cloud, Cpu } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+
+function ScrambleText({ text }: { text: string }) {
+    const [displayText, setDisplayText] = useState(text);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    useEffect(() => {
+        if (!isInView) {
+            setDisplayText(text.split("").map(c => c === " " ? " " : CHARS[Math.floor(Math.random() * CHARS.length)]).join(""));
+            return;
+        }
+        let iterations = 0;
+        const interval = setInterval(() => {
+            setDisplayText(text.split("").map((letter, index) => {
+                if (index < iterations) return text[index];
+                if (letter === " ") return " ";
+                return CHARS[Math.floor(Math.random() * CHARS.length)];
+            }).join("")
+            );
+
+            if (iterations >= text.length) {
+                clearInterval(interval);
+                setDisplayText(text);
+            }
+            iterations += 1 / 3;
+        }, 30);
+        return () => clearInterval(interval);
+    }, [text, isInView]);
+
+    return <span ref={ref}>{displayText}</span>;
+}
+
+const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: { staggerChildren: 0.15 }
+    }
+};
+
+const cardVariants: Variants = {
+    hidden: { opacity: 0, y: -100, rotateX: 60, scale: 0.8, filter: "blur(10px)" },
+    show: {
+        opacity: 1, y: 0, rotateX: 0, scale: 1, filter: "blur(0px)",
+        transition: { type: "spring", stiffness: 100, damping: 12, mass: 1.5 }
+    }
+};
 
 interface Skill {
     name: string;
@@ -127,8 +176,8 @@ export default function Skills() {
     const headerRef = useScrollReveal<HTMLDivElement>({ preset: "fade-up", duration: 1000 });
 
     return (
-        <section id="skills" className="py-32 relative min-h-screen">
-            <Container>
+        <section id="skills" className="py-32 relative min-h-screen overflow-hidden">
+            <Container className="relative z-10">
                 {/* Header */}
                 <div ref={headerRef} className="text-center mb-20 space-y-4">
                     <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
@@ -158,9 +207,16 @@ export default function Skills() {
                                     <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <motion.div
+                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                                    variants={containerVariants}
+                                    initial="hidden"
+                                    whileInView="show"
+                                    viewport={{ once: true, margin: "-100px" }}
+                                >
                                     {categorySkills.map((skill) => (
                                         <motion.div
+                                            variants={cardVariants}
                                             layoutId={`card-${skill.name}`}
                                             key={skill.name}
                                             onClick={() => setSelectedSkill(skill)}
@@ -182,7 +238,7 @@ export default function Skills() {
                                                     </div>
                                                 </div>
 
-                                                <h4 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--accent-cyan)] transition-colors">{skill.name}</h4>
+                                                <h4 className="text-xl font-bold text-white mb-2 group-hover:text-[var(--accent-cyan)] transition-colors"><ScrambleText text={skill.name} /></h4>
                                                 <p className="text-sm text-gray-400 mb-6 flex-grow">{skill.descriptor}</p>
 
                                                 <div className="flex items-center gap-2 text-xs font-mono text-gray-500 pt-4 border-t border-white/5">
@@ -192,7 +248,7 @@ export default function Skills() {
                                             </div>
                                         </motion.div>
                                     ))}
-                                </div>
+                                </motion.div>
                             </div>
                         );
                     })}

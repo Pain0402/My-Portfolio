@@ -8,7 +8,7 @@ import { Color } from "three";
 export function StarField(props: any) {
     const ref = useRef<any>(null);
     const [sphere] = useState(() => {
-        const data = random.inSphere(new Float32Array(5001), { radius: 1.5 });
+        const data = random.inSphere(new Float32Array(5001), { radius: 50 });
         // Validate against NaN
         for (let i = 0; i < data.length; i++) {
             if (isNaN(data[i])) data[i] = 0;
@@ -29,7 +29,7 @@ export function StarField(props: any) {
                 <PointMaterial
                     transparent
                     color="#00f5d4"
-                    size={0.0035} // Increased size for visibility
+                    size={0.05} // Increased size for visibility
                     sizeAttenuation={true}
                     depthWrite={false}
                     toneMapped={false} // Important for bloom!
