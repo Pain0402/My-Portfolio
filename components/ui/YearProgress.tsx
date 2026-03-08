@@ -5,11 +5,13 @@ import { CalendarDays, Moon } from 'lucide-react';
 
 export function YearProgress({ className = "absolute bottom-6 left-6 z-50 w-72" }: { className?: string }) {
     const [timeLeft, setTimeLeft] = useState<{
+        months: number;
+        weeks: number;
         days: number;
         hours: number;
         minutes: number;
         seconds: number;
-    }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    }>({ months: 0, weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
 
     const [percentage, setPercentage] = useState(0);
     const [targetType, setTargetType] = useState<'solar' | 'lunar'>('solar');
@@ -33,17 +35,36 @@ export function YearProgress({ className = "absolute bottom-6 left-6 z-50 w-72" 
             const difference = newYearDate.getTime() - now.getTime();
 
             if (difference > 0) {
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((difference / 1000 / 60) % 60);
-                const seconds = Math.floor((difference / 1000) % 60);
+                // Determine months exactly
+                let m = (newYearDate.getFullYear() - now.getFullYear()) * 12 + (newYearDate.getMonth() - now.getMonth());
+                let tempDate = new Date(now);
+                tempDate.setMonth(now.getMonth() + m);
+                // If adding 'm' months overshoots the target, subtract 1 month
+                if (tempDate.getTime() > newYearDate.getTime()) {
+                    m--;
+                    tempDate = new Date(now);
+                    tempDate.setMonth(now.getMonth() + m);
+                }
 
-                setTimeLeft({ days, hours, minutes, seconds });
+                // Remaining milliseconds after subtracting exact months
+                const diffAfterMonths = newYearDate.getTime() - tempDate.getTime();
+
+                // Calculate weeks and days
+                const totalDaysAfterMonths = Math.floor(diffAfterMonths / (1000 * 60 * 60 * 24));
+                const weeks = Math.floor(totalDaysAfterMonths / 7);
+                const days = totalDaysAfterMonths % 7;
+
+                // Keep hours, minutes, seconds as remainder
+                const hours = Math.floor((diffAfterMonths / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diffAfterMonths / 1000 / 60) % 60);
+                const seconds = Math.floor((diffAfterMonths / 1000) % 60);
+
+                setTimeLeft({ months: m, weeks, days, hours, minutes, seconds });
 
                 const currentPercentage = (elapsedMs / totalYearMs) * 100;
                 setPercentage(Math.min(Math.max(currentPercentage, 0), 100));
             } else {
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                setTimeLeft({ months: 0, weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
                 setPercentage(100);
             }
         };
@@ -80,31 +101,22 @@ export function YearProgress({ className = "absolute bottom-6 left-6 z-50 w-72" 
                 </button>
             </div>
 
-            <div className="flex gap-4 sm:gap-8 justify-center sm:justify-between text-center mb-8 relative z-10 font-display">
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-20 sm:w-24 sm:h-28 glassmorphism bg-black/40 border border-white/10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.05)] mb-2">
-                        <span className="text-3xl sm:text-5xl font-bold text-white tracking-widest">{timeLeft.days}</span>
+            <div className="grid grid-cols-3 sm:flex sm:flex-nowrap gap-3 sm:gap-4 justify-center sm:justify-between text-center mb-8 relative z-10 font-display">
+                {[
+                    { label: 'Months', value: timeLeft.months, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
+                    { label: 'Weeks', value: timeLeft.weeks, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
+                    { label: 'Days', value: timeLeft.days, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
+                    { label: 'Hrs', value: timeLeft.hours.toString().padStart(2, '0'), color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
+                    { label: 'Min', value: timeLeft.minutes.toString().padStart(2, '0'), color: 'text-[var(--accent-pink)]', borderColor: 'border-[var(--accent-pink)]/20', shadow: 'shadow-[0_0_20px_rgba(247,37,133,0.1)]' },
+                    { label: 'Sec', value: timeLeft.seconds.toString().padStart(2, '0'), color: 'text-[var(--accent-cyan)]', borderColor: 'border-[var(--accent-cyan)]/20', shadow: 'shadow-[0_0_20px_rgba(76,201,240,0.1)]' },
+                ].map((item, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                        <div className={`w-full aspect-square sm:aspect-auto sm:w-16 sm:h-20 lg:w-20 lg:h-28 glassmorphism bg-black/40 border ${item.borderColor} text-white rounded-xl flex items-center justify-center ${item.shadow} mb-2`}>
+                            <span className={`text-3xl sm:text-3xl lg:text-4xl font-bold ${item.color} tracking-widest`}>{item.value}</span>
+                        </div>
+                        <span className={`text-[10px] sm:text-xs ${item.color === 'text-white' ? 'text-white/50' : item.color.replace('text-', 'text-').concat('/70')} uppercase tracking-[0.1em] sm:tracking-[0.2em]`}>{item.label}</span>
                     </div>
-                    <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-[0.2em]">Days</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-20 sm:w-24 sm:h-28 glassmorphism bg-black/40 border border-white/10 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.05)] mb-2">
-                        <span className="text-3xl sm:text-5xl font-bold text-white tracking-widest">{timeLeft.hours.toString().padStart(2, '0')}</span>
-                    </div>
-                    <span className="text-[10px] sm:text-xs text-white/50 uppercase tracking-[0.2em]">Hrs</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-20 sm:w-24 sm:h-28 glassmorphism bg-black/40 border border-[var(--accent-pink)]/20 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(247,37,133,0.1)] mb-2">
-                        <span className="text-3xl sm:text-5xl font-bold text-[var(--accent-pink)] tracking-widest">{timeLeft.minutes.toString().padStart(2, '0')}</span>
-                    </div>
-                    <span className="text-[10px] sm:text-xs text-[var(--accent-pink)]/70 uppercase tracking-[0.2em]">Min</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <div className="w-16 h-20 sm:w-24 sm:h-28 glassmorphism bg-black/40 border border-[var(--accent-cyan)]/20 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(76,201,240,0.1)] mb-2">
-                        <span className="text-3xl sm:text-5xl font-bold text-[var(--accent-cyan)] tracking-widest">{timeLeft.seconds.toString().padStart(2, '0')}</span>
-                    </div>
-                    <span className="text-[10px] sm:text-xs text-[var(--accent-cyan)]/70 uppercase tracking-[0.2em]">Sec</span>
-                </div>
+                ))}
             </div>
 
             <div className="space-y-1 relative z-10">
