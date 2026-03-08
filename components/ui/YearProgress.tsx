@@ -95,20 +95,20 @@ export function YearProgress({ className = "absolute bottom-6 left-6 z-50 w-72" 
                 </button>
             </div>
 
-            <div className="grid grid-cols-3 sm:flex sm:flex-nowrap gap-3 sm:gap-4 justify-center sm:justify-between text-center mb-8 relative z-10 font-display">
+            <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 justify-between w-full text-center mb-10 relative z-10 font-display">
                 {[
-                    { label: 'Months', value: timeLeft.months, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
-                    { label: 'Weeks', value: timeLeft.weeks, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
-                    { label: 'Days', value: timeLeft.days, color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
-                    { label: 'Hrs', value: timeLeft.hours.toString().padStart(2, '0'), color: 'text-white', borderColor: 'border-white/10', shadow: 'shadow-[0_0_20px_rgba(255,255,255,0.05)]' },
-                    { label: 'Min', value: timeLeft.minutes.toString().padStart(2, '0'), color: 'text-[var(--accent-pink)]', borderColor: 'border-[var(--accent-pink)]/20', shadow: 'shadow-[0_0_20px_rgba(247,37,133,0.1)]' },
-                    { label: 'Sec', value: timeLeft.seconds.toString().padStart(2, '0'), color: 'text-[var(--accent-cyan)]', borderColor: 'border-[var(--accent-cyan)]/20', shadow: 'shadow-[0_0_20px_rgba(76,201,240,0.1)]' },
+                    { label: 'Months', value: timeLeft.months, color: 'text-white', borderColor: 'border-white/15', shadow: 'shadow-[0_0_25px_rgba(255,255,255,0.02)]', bg: 'bg-black/40' },
+                    { label: 'Weeks', value: timeLeft.weeks, color: 'text-white', borderColor: 'border-white/15', shadow: 'shadow-[0_0_25px_rgba(255,255,255,0.02)]', bg: 'bg-black/40' },
+                    { label: 'Days', value: timeLeft.days, color: 'text-white', borderColor: 'border-white/15', shadow: 'shadow-[0_0_25px_rgba(255,255,255,0.02)]', bg: 'bg-black/40' },
+                    { label: 'Hrs', value: timeLeft.hours.toString().padStart(2, '0'), color: 'text-white', borderColor: 'border-white/15', shadow: 'shadow-[0_0_25px_rgba(255,255,255,0.02)]', bg: 'bg-black/40' },
+                    { label: 'Min', value: timeLeft.minutes.toString().padStart(2, '0'), color: 'text-[var(--accent-pink)]', borderColor: 'border-[var(--accent-pink)]/30', shadow: 'shadow-[0_0_30px_rgba(247,37,133,0.15)]', bg: 'bg-[var(--accent-pink)]/5' },
+                    { label: 'Sec', value: timeLeft.seconds.toString().padStart(2, '0'), color: 'text-[var(--accent-cyan)]', borderColor: 'border-[var(--accent-cyan)]/30', shadow: 'shadow-[0_0_30px_rgba(76,201,240,0.15)]', bg: 'bg-[var(--accent-cyan)]/5' },
                 ].map((item, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                        <div className={`w-full aspect-square sm:aspect-auto sm:w-16 sm:h-20 lg:w-20 lg:h-28 glassmorphism bg-black/40 border ${item.borderColor} text-white rounded-xl flex items-center justify-center ${item.shadow} mb-2`}>
-                            <span className={`text-3xl sm:text-3xl lg:text-4xl font-bold ${item.color} tracking-widest`}>{item.value}</span>
+                    <div key={index} className="flex flex-col items-center w-full">
+                        <div className={`w-full aspect-square sm:aspect-auto sm:h-24 lg:h-32 glassmorphism ${item.bg} border ${item.borderColor} text-white rounded-2xl flex items-center justify-center ${item.shadow} mb-3 transition-all duration-300 hover:-translate-y-1 hover:border-white/30 backdrop-blur-xl`}>
+                            <span className={`text-4xl sm:text-4xl lg:text-5xl font-bold ${item.color} tracking-wider`}>{item.value}</span>
                         </div>
-                        <span className={`text-[10px] sm:text-xs ${item.color === 'text-white' ? 'text-white/50' : item.color.replace('text-', 'text-').concat('/70')} uppercase tracking-[0.1em] sm:tracking-[0.2em]`}>{item.label}</span>
+                        <span className={`text-[10px] sm:text-xs font-bold ${item.color === 'text-white' ? 'text-gray-400' : item.color} uppercase tracking-[0.2em]`}>{item.label}</span>
                     </div>
                 ))}
             </div>
