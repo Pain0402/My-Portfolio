@@ -124,36 +124,39 @@ export default function NotesBoard({ rawData }: { rawData: string }) {
             </div>
 
             {notes.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center opacity-50 border border-dashed border-[var(--accent-purple)]/30 rounded-xl p-8 text-center text-[var(--accent-purple)] bg-[var(--accent-purple)]/5">
+                <div className="flex-1 flex flex-col items-center justify-center opacity-50 border border-dashed border-[var(--accent-purple)]/30 rounded-2xl p-8 text-center text-[var(--accent-purple)] bg-[var(--accent-purple)]/5 min-h-[300px]">
                     <HelpCircle size={40} className="mb-4" />
                     <p>Your vault is empty.</p>
                     <p className="text-sm mt-1">Click "New Card" to add rich-text notes or tasks.</p>
                 </div>
             ) : (
-                <div className="columns-1 sm:columns-2 gap-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2 pb-4">
+                <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2 pb-4">
                     {notes.map(note => (
                         <div
                             key={note.id}
                             onClick={() => handleEdit(note)}
-                            className="break-inside-avoid bg-white/5 border border-white/10 rounded-xl p-5 hover:border-[var(--accent-purple)]/50 transition-all cursor-pointer group shadow-lg flex flex-col"
+                            className="break-inside-avoid bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-5 hover:border-[var(--accent-purple)]/50 hover:bg-white/[0.02] transition-all cursor-pointer group shadow-lg flex flex-col relative overflow-hidden"
                         >
                             <div className="flex justify-between items-start mb-3">
-                                <h3 className="font-bold text-white text-lg group-hover:text-[var(--accent-purple)] transition-colors pr-4">{note.title}</h3>
-                                <button onClick={(e) => handleDelete(note.id, e)} className="text-gray-500 hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 rounded">
+                                <h3 className="font-bold text-white text-lg group-hover:text-[var(--accent-purple)] transition-colors pr-6 leading-snug w-[85%] break-words">{note.title}</h3>
+                                <button onClick={(e) => handleDelete(note.id, e)} className="text-gray-500 hover:text-red-400 p-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 rounded-lg absolute top-4 right-4 z-10">
                                     <Trash2 size={16} />
                                 </button>
                             </div>
 
                             {/* Preview snippet max 5 lines */}
-                            <div
-                                className="text-sm text-gray-400 mb-4 line-clamp-5 prose prose-sm prose-invert tiptap-editor-custom preview-mode"
-                                dangerouslySetInnerHTML={{ __html: note.content }}
-                            />
+                            <div className="relative mb-5 max-h-32 overflow-hidden">
+                                <div
+                                    className="text-sm text-gray-400 line-clamp-4 prose prose-sm prose-invert tiptap-editor-custom preview-mode"
+                                    dangerouslySetInnerHTML={{ __html: note.content }}
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#131317] to-transparent pointer-events-none rounded-b-2xl opacity-60"></div>
+                            </div>
 
-                            <div className="flex justify-between items-end border-t border-white/5 pt-3 mt-auto">
+                            <div className="flex justify-between items-center border-t border-white/5 pt-3 mt-auto relative z-10">
                                 <div className="flex gap-1 flex-wrap max-w-[70%]">
                                     {note.tags.map(t => (
-                                        <span key={t} className="text-[10px] bg-white/10 text-gray-300 px-1.5 py-0.5 rounded-sm">{t}</span>
+                                        <span key={t} className="text-[10px] bg-white/10 text-gray-300 px-1.5 py-0.5 rounded-sm font-medium">{t}</span>
                                     ))}
                                 </div>
                                 <span className="text-[10px] text-gray-500 block shrink-0">{format(new Date(note.createdAt), "MMM d, yyyy")}</span>
@@ -166,28 +169,29 @@ export default function NotesBoard({ rawData }: { rawData: string }) {
             {/* Modal Editor */}
             {showModal && activeNote && (
                 <div className="fixed inset-0 z-[100] flex justify-center items-center p-4 sm:p-6 backdrop-blur-md bg-black/80" onClick={() => setShowModal(false)}>
-                    <div className="bg-[#0f0f13] border border-white/10 rounded-2xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh] shadow-[0_0_50px_rgba(114,9,183,0.2)] relative overflow-hidden" onClick={e => e.stopPropagation()}>
+                    <div className="bg-[#0A0A0C]/95 border border-white/10 rounded-2xl p-0 w-full max-w-5xl min-h-[60vh] sm:min-h-[80vh] flex flex-col shadow-[0_0_80px_rgba(114,9,183,0.15)] relative overflow-hidden backdrop-blur-3xl" onClick={e => e.stopPropagation()}>
+
                         {/* Header */}
-                        <div className="flex justify-between items-center mb-6 gap-4">
+                        <div className="flex justify-between items-center p-6 sm:p-8 border-b border-white/5 gap-4 bg-gradient-to-b from-white/[0.02] to-transparent shrink-0">
                             <input
                                 type="text"
                                 value={activeNote.title}
                                 onChange={(e) => setActiveNote({ ...activeNote, title: e.target.value })}
                                 placeholder="Untitled Note..."
-                                className="bg-transparent border-none text-2xl font-bold text-white focus:outline-none focus:ring-0 placeholder-gray-600 w-full"
+                                className="bg-transparent border-none text-3xl sm:text-4xl font-display font-bold text-white focus:outline-none focus:ring-0 placeholder-gray-600 w-full"
                             />
-                            <div className="flex items-center gap-2">
-                                <button onClick={handleSaveActiveNote} className="bg-[var(--accent-cyan)] hover:bg-[var(--accent-cyan)]/80 text-black px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shrink-0">
-                                    <Save size={16} /> Save
+                            <div className="flex items-center gap-3">
+                                <button onClick={handleSaveActiveNote} className="bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/80 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(114,9,183,0.4)] shrink-0">
+                                    <Save size={18} /> Save
                                 </button>
-                                <button onClick={() => setShowModal(false)} className="bg-white/10 text-gray-300 hover:text-white hover:bg-white/20 p-2 rounded-lg shrink-0 transition-colors">
+                                <button onClick={() => setShowModal(false)} className="bg-white/5 text-gray-400 border border-white/10 hover:text-white hover:bg-white/10 p-2.5 rounded-xl shrink-0 transition-colors">
                                     <X size={20} />
                                 </button>
                             </div>
                         </div>
 
                         {/* Editor */}
-                        <div className="flex-1 overflow-hidden bg-black/40 rounded-xl border border-white/5 p-4 custom-scrollbar">
+                        <div className="flex-1 overflow-hidden bg-transparent flex flex-col relative">
                             <TipTapEditor
                                 content={activeNote.content}
                                 onChange={(html) => setActiveNote({ ...activeNote, content: html })}

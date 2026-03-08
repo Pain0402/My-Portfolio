@@ -13,12 +13,12 @@ const MenuBar = ({ editor }: { editor: any }) => {
     }
 
     return (
-        <div className="flex flex-wrap gap-2 mb-4 p-2 bg-black/40 rounded-lg border border-white/10">
+        <div className="flex flex-wrap gap-1 p-2 bg-black/50 border-b border-white/10 backdrop-blur-xl sticky top-0 z-20">
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 disabled={!editor.can().chain().focus().toggleBold().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('bold') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bold') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Bold size={16} />
             </button>
@@ -26,7 +26,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 disabled={!editor.can().chain().focus().toggleItalic().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('italic') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('italic') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Italic size={16} />
             </button>
@@ -34,7 +34,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleStrike().run()}
                 disabled={!editor.can().chain().focus().toggleStrike().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('strike') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('strike') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Strikethrough size={16} />
             </button>
@@ -42,21 +42,21 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('bulletList') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bulletList') ? 'bg-[var(--accent-purple)]/30 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <List size={16} />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleTaskList().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('taskList') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('taskList') ? 'bg-[var(--accent-purple)]/30 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <CheckSquare size={16} />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                className={`p-1.5 rounded transition-colors ${editor.isActive('codeBlock') ? 'bg-white/20 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('codeBlock') ? 'bg-[var(--accent-pink)]/20 text-[var(--accent-pink)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Code size={16} />
             </button>
@@ -76,7 +76,7 @@ export default function TipTapEditor({ content, onChange }: { content: string, o
         content: content || '<p></p>',
         editorProps: {
             attributes: {
-                className: 'tiptap-editor-custom focus:outline-none min-h-[250px] text-gray-300',
+                className: 'tiptap-editor-custom focus:outline-none min-h-[400px] text-gray-200 text-base lg:text-lg',
             },
         },
         immediatelyRender: false,
@@ -86,9 +86,9 @@ export default function TipTapEditor({ content, onChange }: { content: string, o
     })
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full w-full">
             <MenuBar editor={editor} />
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
                 <EditorContent editor={editor} />
             </div>
         </div>
