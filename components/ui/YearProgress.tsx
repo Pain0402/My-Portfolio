@@ -39,25 +39,19 @@ export function YearProgress({ className = "absolute bottom-6 left-6 z-50 w-72" 
                 let m = (newYearDate.getFullYear() - now.getFullYear()) * 12 + (newYearDate.getMonth() - now.getMonth());
                 let tempDate = new Date(now);
                 tempDate.setMonth(now.getMonth() + m);
-                // If adding 'm' months overshoots the target, subtract 1 month
                 if (tempDate.getTime() > newYearDate.getTime()) {
                     m--;
-                    tempDate = new Date(now);
-                    tempDate.setMonth(now.getMonth() + m);
                 }
 
-                // Remaining milliseconds after subtracting exact months
-                const diffAfterMonths = newYearDate.getTime() - tempDate.getTime();
+                // Absolute totals from now to the end of the year (as requested)
+                const totalDays = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const weeks = Math.floor(totalDays / 7);
+                const days = totalDays;
 
-                // Calculate weeks and days
-                const totalDaysAfterMonths = Math.floor(diffAfterMonths / (1000 * 60 * 60 * 24));
-                const weeks = Math.floor(totalDaysAfterMonths / 7);
-                const days = totalDaysAfterMonths % 7;
-
-                // Keep hours, minutes, seconds as remainder
-                const hours = Math.floor((diffAfterMonths / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((diffAfterMonths / 1000 / 60) % 60);
-                const seconds = Math.floor((diffAfterMonths / 1000) % 60);
+                // Keep hours, minutes, seconds as remainder of today
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
 
                 setTimeLeft({ months: m, weeks, days, hours, minutes, seconds });
 
