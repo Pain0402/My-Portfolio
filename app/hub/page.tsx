@@ -7,6 +7,7 @@ import { getNote, updateNote, getTodos, addTodo, updateTodoStatus, deleteTodoAct
 import DailyQuote from "@/components/hub/DailyQuote";
 import LofiPlayer from "@/components/hub/LofiPlayer";
 import { YearProgress } from "@/components/ui/YearProgress";
+import NotesBoard from "@/components/hub/NotesBoard";
 
 // Dynamically import Scene to avoid SSR issues with Three.js
 const Scene = dynamic(() => import("@/components/three/Scene"), { ssr: false });
@@ -37,19 +38,9 @@ export default function HubPage() {
         });
     }, []);
 
-    // Handle Note Change (Auto-save with debounce)
-    const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target.value;
-        setNote(val);
-
-        setIsSavingNote(true);
-        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-
-        saveTimeoutRef.current = setTimeout(async () => {
-            await updateNote(val);
-            setIsSavingNote(false);
-        }, 1000);
-    };
+    // Set initial note raw data
+    // Used to just be a string, but debounce is handled in the child now
+    // Actually we keep `note` as the rawData to pass down to NotesBoard.
 
     // Add Todo
     const handleAddTodo = async (e: React.FormEvent) => {
@@ -120,29 +111,13 @@ export default function HubPage() {
                 {/* Countdown Timer */}
                 <YearProgress className="lg:col-span-4 w-full h-auto p-6 md:p-8" />
 
-                {/* Notes Module */}
-                <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col lg:col-span-1 h-[600px]">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3 text-[var(--accent-purple)]">
-                            <PenTool size={22} />
-                            <h2 className="text-xl font-bold tracking-wide">Cloud Notes</h2>
-                        </div>
-                        {isSavingNote ? (
-                            <span className="text-xs flex items-center gap-2 text-gray-400"><Clock size={12} className="animate-spin" /> Saving...</span>
-                        ) : (
-                            <span className="text-xs flex items-center gap-2 text-green-400"><CheckCircle size={12} /> Saved</span>
-                        )}
-                    </div>
-                    <textarea
-                        value={note}
-                        onChange={handleNoteChange}
-                        placeholder="Write down ideas, snippets, or temporary thoughts..."
-                        className="w-full flex-grow bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-gray-300 focus:outline-none focus:border-[var(--accent-purple)]/50 focus:ring-1 focus:ring-[var(--accent-purple)]/50 transition-all resize-none shadow-inner"
-                    />
+                {/* Advanced Notes Module */}
+                <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col lg:col-span-4 h-[600px]">
+                    <NotesBoard rawData={note} />
                 </div>
 
                 {/* Kanban Board Module */}
-                <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col lg:col-span-3 h-[600px]">
+                <div className="glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col lg:col-span-4 h-[600px]">
                     <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                         <div className="flex items-center gap-3 text-[var(--accent-pink)]">
                             <CheckSquare size={22} />

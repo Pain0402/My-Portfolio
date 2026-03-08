@@ -1,0 +1,132 @@
+.tiptap-editor-custom {
+    outline: none;
+}
+
+.tiptap-editor-custom p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.tiptap-editor-custom p.is-editor-empty:first-child::before {
+    color: #6b7280;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+.tiptap-editor-custom strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.tiptap-editor-custom em {
+    font-style: italic;
+}
+
+.tiptap-editor-custom s {
+    text-decoration: line-through;
+    color: #9ca3af;
+}
+
+/* Lists */
+.tiptap-editor-custom ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap-editor-custom ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap-editor-custom li p {
+    margin-bottom: 0.25rem;
+}
+
+/* Task list specific styles */
+.tiptap-editor-custom ul[data-type="taskList"] {
+    list-style: none;
+    padding: 0;
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>label {
+    flex: 0 0 auto;
+    margin-right: 0.75rem;
+    cursor: pointer;
+    padding-top: 0.2rem;
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>label input[type="checkbox"] {
+    appearance: none;
+    background-color: transparent;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 2px solid #6b7280;
+    /* Tailwind gray-500 */
+    border-radius: 0.25em;
+    display: grid;
+    place-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>label input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--accent-cyan);
+    background-color: var(--accent-cyan);
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>label input[type="checkbox"]:checked {
+    border-color: var(--accent-cyan);
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>label input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li>div {
+    flex: 1 1 auto;
+}
+
+.tiptap-editor-custom ul[data-type="taskList"] li[data-checked="true"]>div {
+    text-decoration: line-through;
+    color: #6b7280;
+    /* Tailwind gray-500 */
+}
+
+/* Code block */
+.tiptap-editor-custom pre {
+    background: #00000088;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-family: inherit;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+}
+
+.tiptap-editor-custom pre code {
+    color: inherit;
+    padding: 0;
+    background: none;
+    font-size: 0.8rem;
+}
