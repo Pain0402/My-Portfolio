@@ -79,6 +79,7 @@ export default function TipTapEditor({ content, onChange }: { content: string, o
                 className: 'tiptap-editor-custom focus:outline-none min-h-[250px] text-gray-300',
             },
         },
+        immediatelyRender: false,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML())
         },
