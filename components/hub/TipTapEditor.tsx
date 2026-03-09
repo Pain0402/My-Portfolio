@@ -18,7 +18,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 disabled={!editor.can().chain().focus().toggleBold().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bold') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bold') ? 'bg-[var(--accent-cyan)] text-black' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Bold size={16} />
             </button>
@@ -26,7 +26,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 disabled={!editor.can().chain().focus().toggleItalic().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('italic') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('italic') ? 'bg-[var(--accent-cyan)] text-black' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Italic size={16} />
             </button>
@@ -34,7 +34,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleStrike().run()}
                 disabled={!editor.can().chain().focus().toggleStrike().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('strike') ? 'bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('strike') ? 'bg-[var(--accent-cyan)] text-black' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Strikethrough size={16} />
             </button>
@@ -42,21 +42,21 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bulletList') ? 'bg-[var(--accent-purple)]/30 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('bulletList') ? 'bg-[var(--accent-purple)] text-white shadow-[0_0_10px_rgba(114,9,183,0.5)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <List size={16} />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleTaskList().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('taskList') ? 'bg-[var(--accent-purple)]/30 text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('taskList') ? 'bg-[var(--accent-purple)] text-white shadow-[0_0_10px_rgba(114,9,183,0.5)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <CheckSquare size={16} />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                className={`p-1.5 rounded-md transition-colors ${editor.isActive('codeBlock') ? 'bg-[var(--accent-pink)]/20 text-[var(--accent-pink)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
+                className={`p-1.5 rounded-md transition-colors ${editor.isActive('codeBlock') ? 'bg-[var(--accent-pink)] text-white shadow-[0_0_10px_rgba(247,37,133,0.5)]' : 'text-gray-400 hover:bg-white/10 hover:text-white'}`}
             >
                 <Code size={16} />
             </button>
@@ -76,7 +76,7 @@ export default function TipTapEditor({ content, onChange }: { content: string, o
         content: content || '<p></p>',
         editorProps: {
             attributes: {
-                className: 'tiptap-editor-custom focus:outline-none min-h-[400px] text-gray-200 text-base lg:text-lg',
+                class: 'tiptap-editor-custom focus:outline-none outline-none min-h-[400px] text-gray-200 text-base lg:text-lg',
             },
         },
         immediatelyRender: false,

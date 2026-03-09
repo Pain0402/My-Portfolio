@@ -1,5 +1,6 @@
 .tiptap-editor-custom {
     outline: none;
+    caret-color: var(--accent-cyan);
 }
 
 .tiptap-editor-custom p {
@@ -31,15 +32,39 @@
 
 /* Lists */
 .tiptap-editor-custom ul {
-    list-style-type: disc;
+    list-style-type: none;
+    /* Removing default and adding custom to color it */
     padding-left: 1.5rem;
     margin-bottom: 0.75rem;
+}
+
+.tiptap-editor-custom ul li {
+    position: relative;
+}
+
+.tiptap-editor-custom ul li::before {
+    content: "•";
+    position: absolute;
+    left: -1rem;
+    color: var(--accent-purple);
+    /* Custom color for bullet */
+    font-weight: bold;
+}
+
+/* Fix for task list to not have the bullet */
+.tiptap-editor-custom ul[data-type="taskList"] li::before {
+    content: none;
 }
 
 .tiptap-editor-custom ol {
     list-style-type: decimal;
     padding-left: 1.5rem;
     margin-bottom: 0.75rem;
+}
+
+.tiptap-editor-custom ol li::marker {
+    color: var(--accent-purple);
+    font-weight: bold;
 }
 
 .tiptap-editor-custom li p {
@@ -106,10 +131,16 @@
     flex: 1 1 auto;
 }
 
+/* Fix text jumping in tasklist */
+.tiptap-editor-custom ul[data-type="taskList"] li>div>p {
+    margin: 0;
+}
+
 .tiptap-editor-custom ul[data-type="taskList"] li[data-checked="true"]>div {
     text-decoration: line-through;
-    color: #6b7280;
-    /* Tailwind gray-500 */
+    color: #4b5563;
+    /* Tailwind gray-600 */
+    opacity: 0.7;
 }
 
 /* Code block */

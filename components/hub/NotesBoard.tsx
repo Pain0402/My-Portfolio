@@ -100,6 +100,47 @@ export default function NotesBoard({ rawData }: { rawData: string }) {
         setActiveNote(null);
     };
 
+    // Very advanced: Handle Checkbox clicks inside raw HTML of the Card!
+    const handleCardContentClick = async (e: React.MouseEvent, clickedNote: NoteItem) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox') {
+            e.stopPropagation(); // Prevent anything else
+            const input = target as HTMLInputElement;
+
+            // Create a virtual DOM to safely manipulate the raw HTML string
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = clickedNote.content;
+
+            // Find which checkbox was clicked by comparing index in the live block
+            const allLiveCheckboxes = Array.from(e.currentTarget.querySelectorAll('input[type="checkbox"]'));
+            const index = allLiveCheckboxes.indexOf(input);
+
+            if (index > -1) {
+                const allHtmlCheckboxes = Array.from(tempDiv.querySelectorAll('input[type="checkbox"]'));
+                if (allHtmlCheckboxes[index]) {
+                    const isChecked = input.checked;
+                    if (isChecked) {
+                        allHtmlCheckboxes[index].setAttribute('checked', 'checked');
+                        allHtmlCheckboxes[index].closest('li')?.setAttribute('data-checked', 'true');
+                    } else {
+                        allHtmlCheckboxes[index].removeAttribute('checked');
+                        allHtmlCheckboxes[index].closest('li')?.setAttribute('data-checked', 'false');
+                    }
+
+                    // Update the state & Database silently without opening modal
+                    const updatedNote = { ...clickedNote, content: tempDiv.innerHTML };
+                    let newNotes = [...notes];
+                    const noteIndex = newNotes.findIndex(n => n.id === updatedNote.id);
+                    if (noteIndex >= 0) {
+                        newNotes[noteIndex] = updatedNote;
+                        setNotes(newNotes);
+                        saveToDB(newNotes); // Avoid await so it feels instant
+                    }
+                }
+            }
+        }
+    };
+
     return (
         <div className="w-full h-full flex flex-col relative">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
@@ -134,23 +175,28 @@ export default function NotesBoard({ rawData }: { rawData: string }) {
                     {notes.map(note => (
                         <div
                             key={note.id}
-                            onClick={() => handleEdit(note)}
-                            className="break-inside-avoid bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-5 hover:border-[var(--accent-purple)]/50 hover:bg-white/[0.02] transition-all cursor-pointer group shadow-lg flex flex-col relative overflow-hidden"
+                            onClick={(e) => handleCardContentClick(e, note)}
+                            className="break-inside-avoid bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-5 hover:border-[var(--accent-purple)]/50 hover:bg-white/[0.02] transition-all group shadow-lg flex flex-col relative overflow-hidden"
                         >
-                            <div className="flex justify-between items-start mb-3">
-                                <h3 className="font-bold text-white text-lg group-hover:text-[var(--accent-purple)] transition-colors pr-6 leading-snug w-[85%] break-words">{note.title}</h3>
-                                <button onClick={(e) => handleDelete(note.id, e)} className="text-gray-500 hover:text-red-400 p-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 rounded-lg absolute top-4 right-4 z-10">
-                                    <Trash2 size={16} />
-                                </button>
+                            <div className="flex justify-between items-start mb-3 min-h-[1.5rem] relative z-20">
+                                <h3 className="font-bold text-white text-lg transition-colors pr-16 leading-snug w-full break-words">{note.title}</h3>
+                                <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-md border border-white/5 rounded-lg absolute -top-1 right-0 p-1 shadow-xl">
+                                    <button onClick={(e) => { e.stopPropagation(); handleEdit(note); }} className="text-gray-400 hover:text-[var(--accent-cyan)] p-1.5 rounded-md transition-colors hover:bg-white/10">
+                                        <Edit3 size={16} />
+                                    </button>
+                                    <button onClick={(e) => handleDelete(note.id, e)} className="text-gray-400 hover:text-red-400 p-1.5 rounded-md transition-colors hover:bg-white/10">
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Preview snippet max 5 lines */}
-                            <div className="relative mb-5 max-h-32 overflow-hidden">
+                            <div className="relative mb-5 max-h-52 overflow-hidden">
                                 <div
-                                    className="text-sm text-gray-400 line-clamp-4 prose prose-sm prose-invert tiptap-editor-custom preview-mode"
+                                    className="text-sm text-gray-400 line-clamp-[8] prose prose-sm prose-invert tiptap-editor-custom preview-mode"
                                     dangerouslySetInnerHTML={{ __html: note.content }}
                                 />
-                                <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#131317] to-transparent pointer-events-none rounded-b-2xl opacity-60"></div>
+                                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#121216] to-transparent pointer-events-none opacity-90 z-10 rounded-b-2xl"></div>
                             </div>
 
                             <div className="flex justify-between items-center border-t border-white/5 pt-3 mt-auto relative z-10">
@@ -191,11 +237,13 @@ export default function NotesBoard({ rawData }: { rawData: string }) {
                         </div>
 
                         {/* Editor */}
-                        <div className="flex-1 overflow-hidden bg-transparent flex flex-col relative">
-                            <TipTapEditor
-                                content={activeNote.content}
-                                onChange={(html) => setActiveNote({ ...activeNote, content: html })}
-                            />
+                        <div className="flex-1 overflow-hidden flex flex-col relative p-6 pt-0 sm:p-8 sm:pt-0">
+                            <div className="flex-1 overflow-hidden bg-white/[0.02] rounded-2xl border border-white/10 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] flex flex-col relative group hover:border-white/20 transition-colors">
+                                <TipTapEditor
+                                    content={activeNote.content}
+                                    onChange={(html) => setActiveNote({ ...activeNote, content: html })}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
