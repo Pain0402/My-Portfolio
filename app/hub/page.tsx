@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { Home, Trash2, ArrowRight, CheckSquare, LayoutDashboard, FileText, CheckCircle, GraduationCap, Shield } from "lucide-react";
+import { Home, Trash2, ArrowRight, CheckSquare, LayoutDashboard, FileText, CheckCircle, GraduationCap, Shield, Headphones } from "lucide-react";
 import { getNote, updateNote, getTodos, addTodo, updateTodoStatus, deleteTodoAction } from "@/app/actions/hub.action";
 import DailyQuote from "@/components/hub/DailyQuote";
 import LofiPlayer from "@/components/hub/LofiPlayer";
@@ -18,7 +18,7 @@ export default function HubPage() {
     const router = useRouter();
 
     // Tabs State
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'notes' | 'tasks' | 'english'>('dashboard');
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'notes' | 'tasks' | 'english' | 'music'>('dashboard');
 
     // Notes State
     const [note, setNote] = useState("");
@@ -86,6 +86,7 @@ export default function HubPage() {
                     { id: 'notes', label: 'Advanced Notes', icon: FileText, color: 'var(--accent-purple)' },
                     { id: 'tasks', label: 'Action Plan', icon: CheckSquare, color: 'var(--accent-pink)' },
                     { id: 'english', label: 'Flashcards', icon: GraduationCap, color: '#f59e0b' },
+                    { id: 'music', label: 'Music Station', icon: Headphones, color: '#10b981' },
                 ].map((tab) => {
                     const isActive = activeTab === tab.id;
                     const Icon = tab.icon;
@@ -260,10 +261,12 @@ export default function HubPage() {
                     </div>
                 )}
 
-            </div>
+                {/* 5. Music Tab (Hidden gracefully when not active to keep playing) */}
+                <div className={`${activeTab === 'music' ? 'flex animate-fade-in-up' : 'hidden'} flex-col w-full min-h-[600px] items-center justify-center p-6`}>
+                    <LofiPlayer />
+                </div>
 
-            {/* Lofi Radio Player */}
-            <LofiPlayer />
+            </div>
         </main>
     );
 }
