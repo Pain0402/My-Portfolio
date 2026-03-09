@@ -76,38 +76,11 @@ export default function HubPage() {
     const doneList = todos.filter(t => t.status === 'done');
 
     return (
-        <main className="relative min-h-screen w-full flex flex-col items-center py-20 px-4 sm:px-6 lg:px-8">
+        <main className="relative min-h-screen w-full flex flex-col items-center pt-8 pb-20 px-4 sm:px-6 lg:px-8">
             <Scene />
 
-            {/* Header & Navigation */}
-            <div className="w-full max-w-[1400px] mb-8 flex flex-col md:flex-row justify-between items-center gap-6 z-10 glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl">
-                <div>
-                    <h1 className="text-3xl md:text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-purple)]">
-                        Giang's Secret Vault
-                    </h1>
-                    <p className="text-gray-400 mt-2 font-light">Your personal space for quick notes, plans, and events.</p>
-                </div>
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => router.push('/')}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 transition-all text-sm font-medium tracking-wide"
-                    >
-                        <Home size={16} /> Home
-                    </button>
-                    <button
-                        onClick={() => router.push('/admin/dashboard')}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent-pink)]/30 hover:border-[var(--accent-pink)] bg-[var(--accent-pink)]/10 hover:bg-[var(--accent-pink)]/20 transition-all text-[var(--accent-pink)] text-sm font-medium tracking-wide"
-                    >
-                        <Shield size={16} /> Admin Portal
-                    </button>
-                </div>
-            </div>
-
-            {/* Daily Quote / Terminal */}
-            <DailyQuote />
-
             {/* Modern Tab Navigation */}
-            <div className="w-full max-w-[1400px] mb-8 z-10 flex border-b border-white/10 relative">
+            <div className="w-full max-w-[1400px] mb-6 z-50 glassmorphism p-2 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl flex flex-wrap justify-center sm:justify-start gap-2 sticky top-4 lg:top-8">
                 {[
                     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'var(--accent-cyan)' },
                     { id: 'notes', label: 'Advanced Notes', icon: FileText, color: 'var(--accent-purple)' },
@@ -120,18 +93,18 @@ export default function HubPage() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                            className={`flex items-center gap-2 px-6 py-4 text-sm font-bold tracking-wide transition-all relative overflow-hidden group ${isActive ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+                            className={`flex items-center gap-2 px-6 py-3.5 text-sm font-bold tracking-wide transition-all rounded-xl relative overflow-hidden group ${isActive ? 'bg-white/10 text-white shadow-inner' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                         >
-                            <Icon size={18} className={`transition-colors duration-300 ${isActive ? '' : 'group-hover:text-white'}`} style={{ color: isActive ? tab.color : '' }} />
+                            <Icon size={18} className={`transition-colors duration-300`} style={{ color: isActive ? tab.color : 'inherit' }} />
                             <span>{tab.label}</span>
 
-                            {/* Active indicator line */}
+                            {/* Active ambient glow */}
                             {isActive && (
-                                <div className="absolute bottom-0 left-0 w-full h-[3px] rounded-t-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ backgroundColor: tab.color }}></div>
+                                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: `linear-gradient(135deg, ${tab.color}40, transparent)` }}></div>
                             )}
-
-                            {/* Hover background */}
-                            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity -z-10 rounded-t-xl" style={{ borderBottomColor: tab.color }}></div>
+                            {isActive && (
+                                <div className="absolute inset-x-0 bottom-0 h-[2px] opacity-70" style={{ backgroundColor: tab.color, boxShadow: `0 -2px 10px ${tab.color}` }}></div>
+                            )}
                         </button>
                     )
                 })}
@@ -142,7 +115,34 @@ export default function HubPage() {
 
                 {/* 1. Dashboard Tab */}
                 {activeTab === 'dashboard' && (
-                    <div className="animate-fade-in-up flex flex-col w-full h-full">
+                    <div className="animate-fade-in-up flex flex-col w-full h-full gap-8">
+                        {/* Header & Navigation */}
+                        <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl">
+                            <div>
+                                <h1 className="text-3xl md:text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-purple)]">
+                                    Giang's Secret Vault
+                                </h1>
+                                <p className="text-gray-400 mt-2 font-light">Your personal space for quick notes, plans, and events.</p>
+                            </div>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => router.push('/')}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 transition-all text-sm font-medium tracking-wide"
+                                >
+                                    <Home size={16} /> Home
+                                </button>
+                                <button
+                                    onClick={() => router.push('/admin/dashboard')}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent-pink)]/30 hover:border-[var(--accent-pink)] bg-[var(--accent-pink)]/10 hover:bg-[var(--accent-pink)]/20 transition-all text-[var(--accent-pink)] text-sm font-medium tracking-wide"
+                                >
+                                    <Shield size={16} /> Admin Portal
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Daily Quote / Terminal */}
+                        <DailyQuote />
+
                         <YearProgress className="w-full h-auto p-6 md:p-8" />
                     </div>
                 )}
