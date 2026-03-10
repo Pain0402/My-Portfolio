@@ -76,11 +76,11 @@ export default function HubPage() {
     const doneList = todos.filter(t => t.status === 'done');
 
     return (
-        <main className="relative min-h-screen w-full flex flex-col items-center pt-8 pb-20 px-4 sm:px-6 lg:px-8">
+        <main className="relative h-screen w-full flex flex-col items-center pt-4 px-4 sm:px-6 lg:px-8 overflow-hidden">
             <Scene />
 
-            {/* Modern Tab Navigation */}
-            <div className="w-full max-w-[1400px] mb-6 z-50 glassmorphism p-2 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl flex flex-wrap justify-center sm:justify-start gap-2 sticky top-4 lg:top-8">
+            {/* Tab Navigation (fixed top) */}
+            <div className="w-full max-w-[1400px] mb-4 z-50 glassmorphism p-2 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl flex flex-wrap justify-center sm:justify-start gap-2 shrink-0">
                 {[
                     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'var(--accent-cyan)' },
                     { id: 'notes', label: 'Advanced Notes', icon: FileText, color: 'var(--accent-purple)' },
@@ -111,12 +111,12 @@ export default function HubPage() {
                 })}
             </div>
 
-            {/* Main Content Area */}
-            <div className="w-full max-w-[1400px] z-10 min-h-[600px] flex flex-col">
+            {/* Main Content Area (fills remaining height, scrolls internally) */}
+            <div className="w-full max-w-[1400px] z-10 flex-1 flex flex-col overflow-hidden">
 
                 {/* 1. Dashboard Tab */}
                 {activeTab === 'dashboard' && (
-                    <div className="animate-fade-in-up flex flex-col w-full h-full gap-8">
+                    <div className="animate-fade-in-up flex flex-col w-full flex-1 gap-8 overflow-y-auto custom-scrollbar pb-8">
                         {/* Header & Navigation */}
                         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl">
                             <div>
@@ -150,14 +150,14 @@ export default function HubPage() {
 
                 {/* 2. Notes Tab */}
                 {activeTab === 'notes' && (
-                    <div className="animate-fade-in-up glassmorphism flex-1 p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col min-h-[600px]">
+                    <div className="animate-fade-in-up glassmorphism flex-1 p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col overflow-hidden">
                         <NotesBoard rawData={note} />
                     </div>
                 )}
 
                 {/* 3. Tasks Tab (Kanban) */}
                 {activeTab === 'tasks' && (
-                    <div className="animate-fade-in-up glassmorphism flex-1 p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col min-h-[600px]">
+                    <div className="animate-fade-in-up glassmorphism flex-1 p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col overflow-hidden">
                         <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
                             <div className="flex items-center gap-3 text-[var(--accent-pink)]">
                                 <CheckSquare size={22} />
@@ -247,7 +247,7 @@ export default function HubPage() {
 
                 {/* 4. English Learning Tab */}
                 {activeTab === 'english' && (
-                    <div className="animate-fade-in-up glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col items-center justify-center min-h-[600px]">
+                    <div className="animate-fade-in-up glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col items-center justify-center flex-1 overflow-y-auto custom-scrollbar">
                         <div className="text-amber-500 mb-6 bg-amber-500/10 p-4 rounded-full">
                             <GraduationCap size={48} />
                         </div>
@@ -261,8 +261,8 @@ export default function HubPage() {
                     </div>
                 )}
 
-                {/* 5. Music Tab (Hidden gracefully when not active to keep playing) */}
-                <div className={`${activeTab === 'music' ? 'flex animate-fade-in-up' : 'hidden'} flex-col w-full min-h-[600px] items-center justify-center p-6`}>
+                {/* 5. Music Tab */}
+                <div className={`${activeTab === 'music' ? 'flex animate-fade-in-up' : 'hidden'} flex-col w-full flex-1 items-center justify-start overflow-y-auto custom-scrollbar pb-8`}>
                     <LofiPlayer />
                 </div>
 
