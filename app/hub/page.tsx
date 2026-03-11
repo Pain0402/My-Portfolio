@@ -262,7 +262,7 @@ export default function HubPage() {
                 )}
 
                 {/* 5. Music Tab */}
-                <div className={`${activeTab === 'music' ? 'flex animate-fade-in-up' : 'hidden'} flex-col w-full flex-1 items-center justify-start overflow-y-auto custom-scrollbar pb-8`}>
+                <div className={`${activeTab === 'music' ? 'flex animate-fade-in-up' : 'hidden'} flex-col w-full flex-1 min-h-0`}>
                     <LofiPlayer />
                 </div>
 

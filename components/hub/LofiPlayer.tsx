@@ -123,7 +123,7 @@ function PomodoroTimer({ accentColor }: { accentColor: string }) {
     const seconds = secondsLeft % 60;
 
     return (
-        <div className="w-full rounded-xl border border-white/10 bg-black/30 p-5 flex flex-col items-center gap-4 relative overflow-hidden">
+        <div className="w-full rounded-xl border border-white/10 bg-black/30 p-5 flex flex-col items-center gap-4 relative overflow-hidden shrink-0">
             {/* Subtle ambient glow */}
             <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ background: `radial-gradient(circle at center, ${modeColor}, transparent 70%)` }} />
 
@@ -232,7 +232,7 @@ export default function LofiPlayer() {
     const [activeStation, setActiveStation] = useState<Station>(STATIONS[0]);
 
     return (
-        <div className="w-full max-w-6xl mx-auto glassmorphism rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300">
+        <div className="w-full h-full max-w-6xl mx-auto glassmorphism rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col">
             <style>{`
                 @keyframes equalizer {
                     0%, 100% { transform: scaleY(0.3); }
@@ -249,9 +249,9 @@ export default function LofiPlayer() {
             </div>
 
             {/* Content Split */}
-            <div className="flex flex-col lg:flex-row bg-black/20">
+            <div className="flex flex-col lg:flex-row bg-black/20 flex-1 min-h-0">
                 {/* Left: Video Player */}
-                <div className="flex-1 p-6 flex flex-col items-center border-b lg:border-b-0 lg:border-r border-white/10">
+                <div className="flex-1 p-6 flex flex-col items-center border-b lg:border-b-0 lg:border-r border-white/10 min-h-0 overflow-y-auto custom-scrollbar">
                     <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black relative shadow-inner transition-all duration-500" style={{ boxShadow: `0 0 30px ${activeStation.color}20` }}>
                         <iframe
                             key={activeStation.id}

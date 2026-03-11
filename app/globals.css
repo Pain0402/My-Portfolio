@@ -89,14 +89,13 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Hide Scrollbar Utility */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* ================ Scrollbar Styles ================ */
+/* Hide all scrollbars globally, scroll still works */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+*::-webkit-scrollbar {
+  display: none;
 }
