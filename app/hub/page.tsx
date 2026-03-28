@@ -8,6 +8,7 @@ import DailyQuote from "@/components/hub/DailyQuote";
 import LofiPlayer from "@/components/hub/LofiPlayer";
 import { YearProgress } from "@/components/ui/YearProgress";
 import NotesBoard from "@/components/hub/NotesBoard";
+import Flashcards from "@/components/hub/Flashcards";
 
 // Dynamically import Scene to avoid SSR issues with Three.js
 const Scene = dynamic(() => import("@/components/three/Scene"), { ssr: false });
@@ -247,17 +248,8 @@ export default function HubPage() {
 
                 {/* 4. English Learning Tab */}
                 {activeTab === 'english' && (
-                    <div className="animate-fade-in-up glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-md flex flex-col items-center justify-center flex-1 overflow-y-auto custom-scrollbar">
-                        <div className="text-amber-500 mb-6 bg-amber-500/10 p-4 rounded-full">
-                            <GraduationCap size={48} />
-                        </div>
-                        <h2 className="text-3xl font-display font-bold text-white mb-2">English Flashcards</h2>
-                        <p className="text-gray-400 max-w-md text-center">
-                            Master new vocabulary with interactive spaced repetition flashcards. The features for adding words and daily training are coming soon in Phase 2!
-                        </p>
-                        <button disabled className="mt-8 px-8 py-3 bg-amber-500/50 text-white font-bold rounded-xl cursor-not-allowed border border-amber-500/50 opacity-50">
-                            Development In Progress
-                        </button>
+                    <div className="animate-fade-in-up flex-1 flex flex-col w-full min-h-0">
+                        <Flashcards />
                     </div>
                 )}
 

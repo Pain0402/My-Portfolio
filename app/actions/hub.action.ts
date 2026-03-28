@@ -82,3 +82,48 @@ export async function deleteTodoAction(id: string) {
     }
     revalidatePath("/hub");
 }
+
+// =======================
+// FLASHCARDS ACTIONS
+// =======================
+
+export async function getFlashcards() {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from('hub_flashcards').select('*').order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("Lỗi fetch flashcards:", error);
+        return [];
+    }
+    return data;
+}
+
+export async function addFlashcard(front: string, back: string) {
+    const supabase = await createClient();
+    const { error } = await supabase.from('hub_flashcards').insert({ front, back, status: 'new' });
+
+    if (error) {
+        throw new Error(error.message);
+    }
+    revalidatePath("/hub");
+}
+
+export async function updateFlashcardStatus(id: string, status: string) {
+    const supabase = await createClient();
+    const { error } = await supabase.from('hub_flashcards').update({ status }).eq('id', id);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+    revalidatePath("/hub");
+}
+
+export async function deleteFlashcardAction(id: string) {
+    const supabase = await createClient();
+    const { error } = await supabase.from('hub_flashcards').delete().eq('id', id);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+    revalidatePath("/hub");
+}
