@@ -1,12 +1,13 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Points, PointMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as random from "maath/random/dist/maath-random.esm";
-import { Color } from "three";
+import { useThemeStore } from "@/store/useThemeStore";
 
 export function StarField(props: any) {
     const ref = useRef<any>(null);
+    const { colors } = useThemeStore();
     const [sphere] = useState(() => {
         const data = random.inSphere(new Float32Array(5001), { radius: 50 });
         // Validate against NaN
@@ -28,7 +29,7 @@ export function StarField(props: any) {
             <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
                 <PointMaterial
                     transparent
-                    color="#00f5d4"
+                    color={colors.accentSecondary}
                     size={0.05} // Increased size for visibility
                     sizeAttenuation={true}
                     depthWrite={false}

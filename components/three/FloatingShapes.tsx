@@ -1,7 +1,8 @@
 "use client";
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Float, Text3D, Center } from "@react-three/drei";
+import { useThemeStore } from "@/store/useThemeStore";
 import * as THREE from "three";
 
 function FloatingLetter({ letter, position, color, speed = 1, rotation = [0, 0, 0] }: any) {
@@ -56,6 +57,7 @@ export function FloatingShapes() {
     // Projects: A
     // Skills: N
     // Footer: G
+    const { colors } = useThemeStore();
 
     return (
         <group>
@@ -63,7 +65,7 @@ export function FloatingShapes() {
             <FloatingLetter
                 letter="G"
                 position={[-4, 1, -2]} // Left side Hero
-                color="#00f5d4" // Cyan
+                color={colors.accentSecondary} // Cyan / Blue
                 speed={0.8}
                 rotation={[0, -0.2, 0]}
             />
@@ -72,7 +74,7 @@ export function FloatingShapes() {
             <FloatingLetter
                 letter="I"
                 position={[4, -2, -8]} // Right side About
-                color="#7b2cbf" // Purple
+                color={colors.accentPrimary} // Purple / Red
                 speed={1}
                 rotation={[0, 0.2, 0.1]}
 
@@ -82,7 +84,7 @@ export function FloatingShapes() {
             <FloatingLetter
                 letter="A"
                 position={[-3, 3, -15]} // Left side Projects
-                color="#f72585" // Pink
+                color={colors.accentTertiary} // Pink / Dark Blue
                 speed={0.9}
                 rotation={[0.1, -0.2, 0]}
             />
@@ -91,7 +93,7 @@ export function FloatingShapes() {
             <FloatingLetter
                 letter="N"
                 position={[3, -1, -22]} // Right side Skills
-                color="#4cc9f0" // Light Blue
+                color={colors.accentSecondary} // Light Blue / Blue
                 speed={1.1}
                 rotation={[0, 0.3, 0]}
             />
@@ -100,7 +102,7 @@ export function FloatingShapes() {
             <FloatingLetter
                 letter="G"
                 position={[0, 2, -28]} // Center deep
-                color="#00f5d4" // Cyan
+                color={colors.accentPrimary} // Cyan / Red
                 speed={0.7}
                 rotation={[0.2, 0, 0]}
             />

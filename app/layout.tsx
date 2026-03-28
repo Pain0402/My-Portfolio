@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "sonner";
+import ThemeProvider from "@/components/shared/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -35,11 +36,13 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${inter.variable} antialiased bg-[var(--bg-space)] text-white overflow-x-hidden`}
         suppressHydrationWarning
       >
-        <HolographicCursor />
-        <SmoothScroll>
-          <PageTransition>{children}</PageTransition>
-        </SmoothScroll>
-        <Toaster theme="dark" position="bottom-right" toastOptions={{ className: 'bg-[var(--bg-space)] border-white/10 text-white' }} />
+        <ThemeProvider>
+          <HolographicCursor />
+          <SmoothScroll>
+            <PageTransition>{children}</PageTransition>
+          </SmoothScroll>
+          <Toaster theme="dark" position="bottom-right" toastOptions={{ className: 'bg-[var(--bg-space)] border-white/10 text-white' }} />
+        </ThemeProvider>
       </body>
     </html>
   );

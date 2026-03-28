@@ -5,6 +5,7 @@ import { LogOut, LayoutDashboard, FolderKanban, Wrench, User, Home } from "lucid
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useThemeStore } from "@/store/useThemeStore";
 
 const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -85,6 +86,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <Home className="w-5 h-5" />
                         <span className="font-medium">Back to Home</span>
                     </Link>
+
+                    {/* Theme Switcher */}
+                    <div className="mt-6 px-2">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Theme</p>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => useThemeStore.getState().setTheme('galaxy')}
+                                className="w-8 h-8 rounded-full border border-white/20 hover:scale-110 transition-transform flex items-center justify-center bg-[#030014] overflow-hidden"
+                                title="Galaxy Theme"
+                            >
+                                <div className="w-1/2 h-full bg-[#7b2cbf]" />
+                                <div className="w-1/2 h-full bg-[#00f5d4]" />
+                            </button>
+                            <button
+                                onClick={() => useThemeStore.getState().setTheme('spiderman')}
+                                className="w-8 h-8 rounded-full border border-white/20 hover:scale-110 transition-transform flex items-center justify-center bg-[#020617] overflow-hidden"
+                                title="Spiderman Theme"
+                            >
+                                <div className="w-1/2 h-full bg-[#ef4444]" />
+                                <div className="w-1/2 h-full bg-[#3b82f6]" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </aside>
 
