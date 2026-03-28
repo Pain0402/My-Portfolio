@@ -251,7 +251,7 @@ export default function LofiPlayer() {
             {/* Content Split */}
             <div className="flex flex-col lg:flex-row bg-black/20 flex-1 min-h-0">
                 {/* Left: Video Player */}
-                <div className="flex-1 p-6 flex flex-col items-center border-b lg:border-b-0 lg:border-r border-white/10 min-h-0 overflow-y-auto custom-scrollbar">
+                <div className="flex-1 p-6 flex flex-col items-center border-b lg:border-b-0 lg:border-r border-white/10 min-h-0 overflow-y-auto custom-scrollbar" data-lenis-prevent="true">
                     <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black relative shadow-inner transition-all duration-500" style={{ boxShadow: `0 0 30px ${activeStation.color}20` }}>
                         <iframe
                             key={activeStation.id}
@@ -298,7 +298,7 @@ export default function LofiPlayer() {
                 </div>
 
                 {/* Right: Pomodoro + Station List */}
-                <div className="w-full lg:w-96 p-6 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+                <div className="w-full lg:w-96 p-6 flex flex-col gap-5 min-h-0 overflow-y-auto custom-scrollbar" data-lenis-prevent="true">
                     {/* Pomodoro Timer */}
                     <PomodoroTimer accentColor={activeStation.color} />
 

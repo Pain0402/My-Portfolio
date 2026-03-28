@@ -116,7 +116,7 @@ export default function HubPage() {
 
                 {/* 1. Dashboard Tab */}
                 {activeTab === 'dashboard' && (
-                    <div className="animate-fade-in-up flex flex-col w-full flex-1 gap-8 overflow-y-auto custom-scrollbar pb-8">
+                    <div className="animate-fade-in-up flex flex-col w-full flex-1 gap-8 min-h-0 overflow-y-auto custom-scrollbar pb-8" data-lenis-prevent="true">
                         {/* Header & Navigation */}
                         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 glassmorphism p-6 rounded-2xl border border-[var(--glass-border)] bg-[rgba(255,255,255,0.05)] backdrop-blur-xl">
                             <div>
@@ -190,7 +190,7 @@ export default function HubPage() {
                                         Backlog
                                         <span className="bg-white/10 px-2 py-0.5 rounded text-xs">{todoList.length}</span>
                                     </h3>
-                                    <div className="flex-grow overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                                    <div className="flex-grow min-h-0 overflow-y-auto pr-2 space-y-3 custom-scrollbar" data-lenis-prevent="true">
                                         {todoList.map(t => (
                                             <div key={t.id} className="bg-white/5 border border-white/10 p-3 rounded-lg hover:border-[var(--accent-cyan)]/30 transition-all group">
                                                 <p className="text-sm text-gray-200 mb-3">{t.title}</p>
@@ -209,7 +209,7 @@ export default function HubPage() {
                                         In Progress
                                         <span className="bg-[var(--accent-cyan)]/20 text-[var(--accent-cyan)] px-2 py-0.5 rounded text-xs">{inProgressList.length}</span>
                                     </h3>
-                                    <div className="flex-grow overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                                    <div className="flex-grow min-h-0 overflow-y-auto pr-2 space-y-3 custom-scrollbar" data-lenis-prevent="true">
                                         {inProgressList.map(t => (
                                             <div key={t.id} className="bg-[var(--accent-cyan)]/5 border border-[var(--accent-cyan)]/20 p-3 rounded-lg hover:border-[var(--accent-cyan)]/50 transition-all group">
                                                 <p className="text-sm text-white mb-3">{t.title}</p>
@@ -228,7 +228,7 @@ export default function HubPage() {
                                         Completed
                                         <span className="bg-[var(--accent-pink)]/20 text-[var(--accent-pink)] px-2 py-0.5 rounded text-xs">{doneList.length}</span>
                                     </h3>
-                                    <div className="flex-grow overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                                    <div className="flex-grow min-h-0 overflow-y-auto pr-2 space-y-3 custom-scrollbar" data-lenis-prevent="true">
                                         {doneList.map(t => (
                                             <div key={t.id} className="bg-[var(--accent-pink)]/5 border border-[var(--accent-pink)]/20 p-3 rounded-lg opacity-60 hover:opacity-100 transition-all group">
                                                 <p className="text-sm text-gray-400 line-through mb-3">{t.title}</p>
