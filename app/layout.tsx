@@ -18,8 +18,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Giang Tran | Creative Developer & UI/UX Engineer",
-  description: "Portfolio of Tran Huu Giang - Specializing in Frontend, Backend, and AI.",
+  title: "Giang Tran | Full Stack Developer",
+  description: "Portfolio of Tran Huu Giang - Full Stack Developer specializing in .NET, Vue.js, Node.js, and modern web technologies.",
 };
 
 import { Toaster } from "sonner";

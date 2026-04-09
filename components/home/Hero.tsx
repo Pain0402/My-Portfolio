@@ -13,33 +13,45 @@ export default function Hero() {
         if (!sectionRef.current) return;
 
         const headline = sectionRef.current.querySelector("[data-anim='headline']");
-        const subhead = sectionRef.current.querySelector("[data-anim='subhead']");
+        const subheads = sectionRef.current.querySelectorAll("[data-anim='subhead']");
         const cta = sectionRef.current.querySelector("[data-anim='cta']");
         const scrollIndicator = sectionRef.current.querySelector("[data-anim='scroll']");
 
-        if (!headline || !subhead || !cta) return;
+        if (!headline || !subheads.length || !cta) return;
 
         const tl = createTimeline();
 
-        tl.add(headline, {
+        tl.add(subheads[0], {
             opacity: [0, 1],
-            translateY: [80, 0],
-            delay: 300,
+            translateY: [20, 0],
+            delay: 200,
             easing: "easeOutExpo",
-            duration: 1200,
+            duration: 800,
         })
-            .add(subhead, {
+            .add(headline, {
+                opacity: [0, 1],
+                translateY: [80, 0],
+                easing: "easeOutExpo",
+                duration: 1200,
+            }, "-=400")
+            .add(subheads[1], {
                 opacity: [0, 1],
                 translateY: [40, 0],
                 easing: "easeOutExpo",
                 duration: 1000,
             }, "-=700")
+            .add(subheads[2], {
+                opacity: [0, 1],
+                translateY: [20, 0],
+                easing: "easeOutExpo",
+                duration: 800,
+            }, "-=600")
             .add(cta, {
                 opacity: [0, 1],
                 scale: [0.8, 1],
                 easing: "easeOutElastic(1, .6)",
                 duration: 1200,
-            }, "-=600");
+            }, "-=500");
 
         if (scrollIndicator) {
             tl.add(scrollIndicator, {
@@ -58,16 +70,22 @@ export default function Hero() {
             <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[var(--accent-cyan)] rounded-full blur-[100px] opacity-20 mix-blend-screen pointer-events-none" />
 
             <Container className="relative z-10 text-center">
+                {/* Role badge */}
+                <div data-anim="subhead" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--accent-cyan)]/30 bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)] text-sm font-medium tracking-wide mb-6 opacity-0">
+                    <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] animate-pulse" />
+                    Full Stack Developer
+                </div>
+
                 <h1
                     data-anim="headline"
                     className="font-display font-bold text-5xl md:text-8xl tracking-tight opacity-0 leading-tight"
                 >
                     <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-300 to-gray-600">
-                        Building Intelligent
+                        From Backend API
                     </span> <br />
                     <span className="block h-[1.2em] md:h-[1.5em] overflow-hidden text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
                         <Typewriter
-                            words={["Fullstack Systems", "AI Solutions", "Interactive Webs"]}
+                            words={["To Pixel-Perfect UI", "To Cloud Deployment", "To Production Ready"]}
                             typeSpeed={70}
                             deleteSpeed={50}
                             delaySpeed={1500}
@@ -79,8 +97,17 @@ export default function Hero() {
                     data-anim="subhead"
                     className="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto opacity-0 font-light"
                 >
-                    Creative Developer & UI/UX Engineer crafting immersive 3D web experiences with modern technologies.
+                    Building end-to-end web applications with <span className="text-white/70">.NET</span>, <span className="text-white/70">Vue.js</span>, <span className="text-white/70">Node.js</span> — from clean architecture backends to interactive frontends.
                 </p>
+
+                {/* Tech stack pills */}
+                <div data-anim="subhead" className="mt-6 flex flex-wrap justify-center gap-2 opacity-0">
+                    {['.NET 8', 'Vue 3', 'Node.js', 'PostgreSQL', 'Docker', 'TypeScript'].map((tech) => (
+                        <span key={tech} className="px-3 py-1 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-gray-400 hover:border-white/30 hover:text-white transition-all">
+                            {tech}
+                        </span>
+                    ))}
+                </div>
 
                 <div className="mt-10 flex justify-center gap-4">
                     <button
